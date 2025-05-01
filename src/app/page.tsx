@@ -6,6 +6,7 @@ import HeroSection from "@/components/Home/HeroSection";
 import ResearchSection from "@/components/Home/ResearchSection";
 import TrendsSection from "@/components/Home/TrendsSection";
 import ReviewsSection from "@/components/Home/ReviewsSection";
+import BestReviewSection from "@/components/Home/BestReviewSection";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
         <ResearchSection />
         <TrendsSection />
         <ReviewsSection />
+        <BestReviewSection />
       </div>
     </>
   );
