@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { IoSearchSharp } from "react-icons/io5";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import Image from "next/image";
@@ -15,7 +15,7 @@ const sampleQuestions = [
 ];
 
 export default function SearchBox() {
-  const [searchText, setSearchText] = useState("");
+  //   const [searchText, setSearchText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const totalItems = sampleQuestions.length;

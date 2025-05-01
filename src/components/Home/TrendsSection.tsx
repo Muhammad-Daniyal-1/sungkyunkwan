@@ -1,7 +1,5 @@
 "use client";
 
-import MenuBookIcon from "@/assets/Svgs/MenuBookIcon";
-import { FaRegHeart } from "react-icons/fa";
 import Image from "next/image";
 
 const data = [

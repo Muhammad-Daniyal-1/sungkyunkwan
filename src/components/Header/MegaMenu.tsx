@@ -54,7 +54,7 @@ function MegaMenu() {
           {navItems.map((item, index) => (
             <li key={index} className="py-[1.7rem]">
               <a
-                onMouseEnter={() => setActiveIndex(index as any)}
+                onMouseEnter={() => setActiveIndex(index)}
                 className={`mx-3 pt-3 pb-1.5 mb-1 cursor-pointer hover:text-[#0A0046] hover:border-b-4 border-[#11AC57] hover:font-bold ${
                   activeIndex === index
                     ? "text-[#0A0046] font-bold border-b-4 border-[#11AC57]"
