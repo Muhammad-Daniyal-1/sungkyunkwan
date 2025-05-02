@@ -68,7 +68,7 @@ export default function BestReviewSection() {
                 alt="review-1"
                 width={100}
                 height={120}
-                className="rounded-lg"
+                className="rounded-lg w-[100px] h-[135px]"
               />
               <div>
                 <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ export default function BestReviewSection() {
                 alt="review-1"
                 width={100}
                 height={120}
-                className="rounded-lg"
+                className="rounded-lg w-[100px] h-[135px]"
               />
               <div>
                 <div className="flex items-center gap-2">
