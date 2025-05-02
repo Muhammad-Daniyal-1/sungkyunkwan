@@ -8,7 +8,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 export default function ReviewsSection() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 my-16">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-24">
       <div className="md:col-span-1 bg-white p-4 ">
         <p>오거서가 선정한</p>
         <p className="text-3xl font-bold">

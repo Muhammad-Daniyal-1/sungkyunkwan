@@ -42,7 +42,7 @@ export default function SearchBox() {
 
   return (
     <div>
-      <div className="mt-10 rounded-2xl border-2 border-primary p-8 flex justify-between gap-4">
+      <div className="mt-6 rounded-2xl border-2 border-primary p-8 flex justify-between gap-4">
         <div className="flex w-full items-center">
           <div className="px-20">
             <label className="inline-flex items-center cursor-pointer">

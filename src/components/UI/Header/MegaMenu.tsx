@@ -52,7 +52,7 @@ function MegaMenu() {
       >
         <ul className="flex justify-center px-14 gap-[5rem] text-[#B1B7CC] border-b-1">
           {navItems.map((item, index) => (
-            <li key={index} className="py-[1.7rem]">
+            <li key={index} className="py-4">
               <a
                 onMouseEnter={() => setActiveIndex(index)}
                 className={`mx-3 pt-3 pb-1.5 mb-1 cursor-pointer hover:text-[#0A0046] hover:border-b-4 border-[#11AC57] hover:font-bold ${

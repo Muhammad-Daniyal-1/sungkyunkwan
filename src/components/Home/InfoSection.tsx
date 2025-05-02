@@ -69,7 +69,7 @@ export default function InfoSectionSlider() {
   }, []);
 
   return (
-    <div className="my-16 relative px-4">
+    <div className="mt-24 relative px-4">
       {/* Custom navigation buttons */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
         {/* <button
