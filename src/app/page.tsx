@@ -27,7 +27,7 @@ export default function Home() {
     { id: "research", component: <ResearchSection /> },
     { id: "trends", component: <TrendsSection /> },
     { id: "reviews", component: <ReviewsSection /> },
-    { id: "best-reviews", component: <BestReviewSection /> },
+    // { id: "best-reviews", component: <BestReviewSection /> },
     { id: "love-project", component: <LoveProjectSection /> },
     { id: "info", component: <InfoSection /> },
   ];

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import MenuBookIcon from "@/assets/Svgs/MenuBookIcon";
 import { FaRegHeart } from "react-icons/fa";
 import Image from "next/image";
@@ -31,7 +32,39 @@ const data = [
   },
 ];
 
+const recentData = [
+  {
+    id: 5,
+    title: "Recent advances in machine learning applications...",
+    journal: "IEEE Transactions on Neural Networks 2023",
+    authors: "Kim J., Lee S., Park H., Choi M.",
+  },
+  {
+    id: 6,
+    title:
+      "Artificial intelligence in healthcare: challenges and opportunities",
+    journal: "Journal of Medical Systems 2023",
+    authors: "Park S., Jung Y., Kim D., Lee J.",
+  },
+  {
+    id: 7,
+    title: "Deep learning approaches for natural language processing",
+    journal: "Computational Linguistics 2022",
+    authors: "Yoon K., Jeong H., Lim S., Kang J.",
+  },
+  {
+    id: 8,
+    title: "Blockchain technology for secure data sharing in IoT",
+    journal: "IEEE Internet of Things Journal 2023",
+    authors: "Lee J., Kim H., Choi S., Park M.",
+  },
+];
+
 export default function ResearchSection() {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = ["최신", "많이 인용됨"];
+  const tabsData = [data, recentData];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-24">
       <div className="md:col-span-1 bg-white p-4 ">
@@ -44,15 +77,39 @@ export default function ResearchSection() {
       </div>
 
       <div className="md:col-span-4 relative">
-        <div className="grid grid-cols-4 gap-3.5">
-          {data.map((item) => (
+        {/* Tabs navigation */}
+        <div className="flex mb-6">
+          {tabs.map((tab, index) => (
+            <div key={index} className="relative">
+              <button
+                onClick={() => setActiveTab(index)}
+                className={`pb-2 px-24 border-b border-[#E2EAE8] font-medium text-sm transition-colors duration-700 ease-in-out ${
+                  activeTab === index ? "text-black" : "text-gray-500"
+                }`}
+              >
+                {tab}
+              </button>
+              <div
+                className={`absolute bottom-0 left-0 h-0.5 transition-all duration-700 ease-in-out ${
+                  activeTab === index
+                    ? "bg-secondary w-full"
+                    : "bg-transparent w-0"
+                }`}
+              ></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tab content with smooth transition */}
+        <div className="grid grid-cols-4 gap-3 transition-all duration-700 ease-in-out">
+          {tabsData[activeTab].map((item) => (
             <div
               key={item.id}
               className="border border-[#E2EAE8] px-4 py-7 rounded-xl"
             >
-              <div className="flex justify-between gap-2">
+              <div className="flex justify-between items-center gap-2">
                 <FaRegHeart />
-                <p className="border-x-2 border-gray text-xs items-center px-1.5 flex">
+                <p className="border-x-2 border-gray text-xs items-center flex">
                   <span className="text-red font-bold mx-1">SCOPUS</span>
                   <span className="mx-1">6회인용</span>
                 </p>
@@ -61,7 +118,7 @@ export default function ResearchSection() {
                   <span className="mx-1">1회인용</span>
                 </p>
               </div>
-              <p className="font-bold text-md my-6 ">{item.title}</p>
+              <p className="font-bold text-md my-6">{item.title}</p>
               <div className="flex gap-1 text-[#8188A1] text-sm justify-center items-center my-6">
                 <MenuBookIcon />
                 <p>{item.journal}</p>

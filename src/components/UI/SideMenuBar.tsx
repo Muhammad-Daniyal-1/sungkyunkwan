@@ -28,12 +28,8 @@ const sections = [
     icon: (isActive: boolean) => <ReviewIcon isActive={isActive} />,
   },
   {
-    id: "best-reviews",
-    icon: (isActive: boolean) => <HeartIcon isActive={isActive} />,
-  },
-  {
     id: "love-project",
-    icon: (isActive: boolean) => <SpeakerIcon isActive={isActive} />,
+    icon: (isActive: boolean) => <HeartIcon isActive={isActive} />,
   },
   {
     id: "info",
