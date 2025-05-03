@@ -3,7 +3,7 @@ import { MdPhone } from "react-icons/md";
 
 export default function HeroSection() {
   return (
-    <div className="relative p-8 rounded-xl mt-11 overflow-hidden">
+    <div className="relative p-8 rounded-xl mt-20 overflow-hidden">
       {/* Background image and overlay */}
       <div
         className="absolute inset-0 z-0"
@@ -48,7 +48,7 @@ export default function HeroSection() {
           </div>
         </div>
         <div>
-          {/* Duplicated block #1 */}
+          {/* block #1 */}
           <div className="py-4 px-6 rounded-xl bg-[#FFFFFFCC] mb-6 text-black">
             <div className="flex justify-between mb-2">
               <p className="font-bold text-lg">학술정보관 운영시간</p>
@@ -89,7 +89,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Duplicated block #2 */}
+          {/*block #2 */}
           <div className="py-4 px-6 rounded-xl bg-[#FFFFFFCC] text-black">
             <div className="flex justify-between mb-3">
               <p className="font-bold text-lg">주요전화번호 </p>

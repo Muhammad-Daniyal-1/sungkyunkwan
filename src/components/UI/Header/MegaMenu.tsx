@@ -46,13 +46,13 @@ function MegaMenu() {
   return (
     <div className="w-screen relative">
       <div
-        className="relative"
+        className="relative "
         onMouseLeave={() => setActiveIndex(null)}
         onMouseEnter={() => {}}
       >
         <ul className="flex justify-center px-14 gap-[5rem] text-[#B1B7CC] border-b-1">
           {navItems.map((item, index) => (
-            <li key={index} className="py-[1.7rem]">
+            <li key={index} className="py-5">
               <a
                 onMouseEnter={() => setActiveIndex(index)}
                 className={`mx-3 pt-3 pb-1.5 mb-1 cursor-pointer hover:text-[#0A0046] hover:border-b-4 border-[#11AC57] hover:font-bold ${
@@ -69,7 +69,7 @@ function MegaMenu() {
 
         {/* Submenu rendered */}
         <div
-          className={`absolute left-0 top-full w-screen px-10 z-[9999999] transition-all duration-300 transform ${
+          className={`absolute left-0 right-0 top-full w-screen max-w-[1520px] mx-auto px-10 z-[9999999] transition-all duration-300 transform ${
             activeIndex !== null
               ? "opacity-100 translate-y-0 visible"
               : "opacity-0 -translate-y-2 invisible"

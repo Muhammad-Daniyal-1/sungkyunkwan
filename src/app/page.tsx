@@ -18,6 +18,7 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   // Array of sections data with their IDs
   const sections = [
@@ -47,10 +48,16 @@ export default function Home() {
     // Update URL hash
     window.history.replaceState(null, "", `#${sections[index].id}`);
 
+    // Calculate scroll offset for header
+    // When at the top (index 0), show the header fully
+    // Otherwise, hide TopBar by sliding entire header up
+    const newOffset = index === 0 ? 0 : -70;
+    setScrollOffset(newOffset);
+
     // Reset transition state after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 700); // Match your CSS transition timing
+    }, 700);
   };
 
   // Handle wheel events
@@ -126,33 +133,38 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      {/* Fixed header (40% of screen) */}
-      <div
-        className="fixed top-0 left-0 right-0 z-40 bg-white"
-        style={{ height: "40vh" }}
-      >
-        <TopBar />
-        <MegaMenu />
-        <div className="px-20">
-          <SearchBox />
+      <div className="w-full fixed top-0 left-0 right-0 z-50">
+        <div
+          className="w-full transition-transform duration-700 ease-in-out"
+          style={{ transform: `translateY(${scrollOffset}px)` }}
+        >
+          <TopBar />
+
+          <div className="bg-white">
+            <MegaMenu />
+            <div className="px-20 mx-auto max-w-[1440px]">
+              <SearchBox />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Side menu bar */}
       <SideMenuBar
-        activeSection={sections[currentIndex].id}
+        activeSection={sections[currentIndex]?.id}
         onSectionClick={handleSectionClick}
       />
 
       {/* Sections container with transform for transitions */}
       <div
-        className="absolute left-0 right-0 transition-transform duration-700 ease-in-out px-20"
+        className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
         style={{
-          top: "35vh",
-          height: "65vh",
+          top: "27vh",
+          height: "73vh",
           transform: `translateY(-${currentIndex * 100}%)`,
+          zIndex: 10,
         }}
       >
+        {/* All content sections */}
         {sections.map((section, index) => (
           <div
             key={section.id}
@@ -167,31 +179,16 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Pagination dots (optional) */}
-      {/* <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50">
-        <ul className="flex flex-col items-center gap-4">
-          {sections.map((section, index) => (
-            <li
-              key={section.id}
-              className={`w-3 h-3 rounded-full cursor-pointer transition-all duration-300 ${
-                index === currentIndex
-                  ? "bg-blue-500 scale-125"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
-              onClick={() => goToSection(index)}
-            />
-          ))}
-        </ul>
-      </div> */}
-
-      {/* Footer - only shown when on the last section */}
+      {/* Footer section - appears as last section */}
       <div
-      // className="fixed bottom-0 left-0 right-0 bg-white transition-transform duration-700 ease-in-out"
-      // style={{
-      //   transform: `translateY(${
-      //     currentIndex === sections.length - 1 ? "0" : "100%"
-      //   })`,
-      // }}
+        className={`absolute left-0 right-0 w-full transition-transform duration-700 ease-in-out`}
+        style={{
+          top: "100vh",
+          transform: `translateY(${
+            currentIndex === sections.length - 1 ? "-100%" : "0"
+          })`,
+          zIndex: 10,
+        }}
       >
         <Footer />
       </div>

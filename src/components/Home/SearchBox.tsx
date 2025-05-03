@@ -42,7 +42,7 @@ export default function SearchBox() {
 
   return (
     <div>
-      <div className="mt-6 rounded-2xl border-2 border-primary p-8 flex justify-between gap-4">
+      <div className="mt-5 rounded-2xl border-2 border-primary p-6 flex justify-between gap-4">
         <div className="flex w-full items-center">
           <div className="px-20">
             <label className="inline-flex items-center cursor-pointer">
@@ -62,14 +62,14 @@ export default function SearchBox() {
       </div>
 
       <div className="flex mt-4 gap-8 items-start">
-        <div className="flex gap-2 items-center w-fit">
+        <div className="flex gap-2 items-center max-w-[1440px] mx-auto">
           <Image
             src="/svgs/festival.svg"
             alt="Festival"
             width={24}
             height={24}
           />
-          <p className="whitespace-nowrap w-fit">
+          <p className="whitespace-nowrap">
             우리과(소프트웨어공학과) 친구들은 친구들은 이런 질문을 많이 했어요!
           </p>
         </div>

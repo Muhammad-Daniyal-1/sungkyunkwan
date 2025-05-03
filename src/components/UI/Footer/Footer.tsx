@@ -3,21 +3,21 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <div>
-      <div className="flex justify-center items-center gap-8 border border-gray  pb-3 pt-4">
+    <div className="bg-white">
+      <div className="flex justify-center items-center gap-8 border border-gray  pb-2 pt-3">
         <p>주요전화번호</p>
         <div className="w-[1px] h-4 bg-[#CDD2E0]" />
         <p>개인정보처리방침</p>
         <div className="w-[1px] h-4 bg-[#CDD2E0]" />
         <p>이메일무단수집거부</p>
       </div>
-      <div className="flex justify-between items-center py-4 gap-10 max-w-[1200px] mx-auto px-20">
+      <div className="flex justify-between items-center py-3 gap-10 max-w-[1200px] mx-auto px-20">
         <div className="flex items-center gap-4">
           <Image
             src="/svgs/footer-logo.svg"
             alt="footer-logo"
-            width={100}
-            height={100}
+            width={90}
+            height={90}
           />
           <div>
             <p className="text-[#454F6F] text-sm">

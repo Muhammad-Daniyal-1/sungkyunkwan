@@ -37,7 +37,7 @@ const sections = [
   },
   {
     id: "info",
-    icon: (isActive: boolean) => <SpeakerIcon isActive={isActive} />, // You might want a different icon
+    icon: (isActive: boolean) => <SpeakerIcon isActive={isActive} />,
   },
 ];
 
