@@ -1,11 +1,10 @@
 "use client";
 
-// Home.jsx
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import TopBar from "@/components/UI/Header/TopBar";
 import MegaMenu from "@/components/UI/Header/MegaMenu";
 import SideMenuBar from "@/components/UI/SideMenuBar";
-import SearchBox from "@/components/Home/SearchBox"; // We'll modify this component
+import SearchBox from "@/components/Home/SearchBox";
 import HeroSection from "@/components/Home/HeroSection";
 import ResearchSection from "@/components/Home/ResearchSection";
 import TrendsSection from "@/components/Home/TrendsSection";
@@ -19,12 +18,8 @@ import RightSidebar from "@/components/UI/RightSidebar";
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [touchStart, setTouchStart] = useState(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
-  const [searchBoxHeight, setSearchBoxHeight] = useState(0);
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const contentContainerRef = useRef(null);
-  const searchWrapperRef = useRef(null);
 
   // Array of sections data with their IDs
   const sections = [
@@ -37,19 +32,13 @@ export default function Home() {
     { id: "info", component: <InfoSection /> },
   ];
 
-  // Handle search box expansion state change
-  const handleSearchExpandChange = (expanded) => {
-    setIsSearchExpanded(expanded);
-  };
-
   // Handle section change
-  const goToSection = (index) => {
+  const goToSection = (index: number) => {
     if (
       isTransitioning ||
       index === currentIndex ||
       index < 0 ||
-      index >= sections.length ||
-      isSearchExpanded
+      index >= sections.length
     ) {
       return;
     }
@@ -72,46 +61,12 @@ export default function Home() {
     }, 700);
   };
 
-  // Monitor SearchBox height changes using MutationObserver
-  useEffect(() => {
-    if (!searchWrapperRef.current || !contentContainerRef.current) return;
-
-    const updateSearchBoxHeight = () => {
-      if (searchWrapperRef.current) {
-        const height = searchWrapperRef.current.offsetHeight;
-        // Only update if the height has actually changed
-        if (height !== searchBoxHeight) {
-          setSearchBoxHeight(height);
-        }
-      }
-    };
-
-    // Initial measurement
-    updateSearchBoxHeight();
-
-    // Setup MutationObserver to detect DOM changes
-    const observer = new MutationObserver(() => {
-      updateSearchBoxHeight();
-    });
-
-    // Observe the search wrapper for any changes
-    observer.observe(searchWrapperRef.current, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [isSearchExpanded, searchBoxHeight]);
-
   // Handle wheel events
   useEffect(() => {
-    const handleWheel = (e) => {
+    const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      if (isTransitioning || isSearchExpanded) return;
+      if (isTransitioning) return;
 
       // Determine scroll direction and move section accordingly
       const direction = e.deltaY > 0 ? 1 : -1;
@@ -119,8 +74,8 @@ export default function Home() {
     };
 
     // Handle keyboard navigation
-    const handleKeyDown = (e) => {
-      if (isTransitioning || isSearchExpanded) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isTransitioning) return;
 
       if (e.key === "ArrowUp" || e.key === "PageUp") {
         e.preventDefault();
@@ -138,16 +93,16 @@ export default function Home() {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentIndex, isTransitioning, isSearchExpanded]);
+  }, [currentIndex, isTransitioning]);
 
   // Handle touch events for mobile
   useEffect(() => {
-    const handleTouchStart = (e) => {
+    const handleTouchStart = (e: TouchEvent) => {
       setTouchStart(e.touches[0].clientY);
     };
 
-    const handleTouchMove = (e) => {
-      if (touchStart === null || isTransitioning || isSearchExpanded) return;
+    const handleTouchMove = (e: TouchEvent) => {
+      if (touchStart === null || isTransitioning) return;
 
       const touchEnd = e.touches[0].clientY;
       const diff = touchStart - touchEnd;
@@ -167,18 +122,15 @@ export default function Home() {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [currentIndex, isTransitioning, touchStart, isSearchExpanded]);
+  }, [currentIndex, isTransitioning, touchStart]);
 
   // Handle section navigation from sidebar
-  const handleSectionClick = (sectionId) => {
+  const handleSectionClick = (sectionId: string) => {
     const index = sections.findIndex((section) => section.id === sectionId);
     if (index !== -1) {
       goToSection(index);
     }
   };
-
-  // Calculate additional offset for content based on SearchBox expansion
-  const contentOffset = isSearchExpanded ? searchBoxHeight - 80 : 0;
 
   return (
     <div className="h-screen w-screen overflow-hidden">
@@ -191,11 +143,8 @@ export default function Home() {
 
           <div className="bg-white" id="fixed-header">
             <MegaMenu />
-            <div
-              ref={searchWrapperRef}
-              className="px-20 mx-auto max-w-[1440px] bg-white"
-            >
-              <SearchBox onExpandChange={handleSearchExpandChange} />
+            <div className="px-20 mx-auto max-w-[1440px]">
+              <SearchBox />
             </div>
           </div>
         </div>
@@ -210,14 +159,12 @@ export default function Home() {
 
       {/* Sections container with transform for transitions */}
       <div
-        ref={contentContainerRef}
-        className="absolute left-0 right-0 max-w-[1440px] mx-auto px-20 z-10"
+        className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
         style={{
-          top: `calc(27vh + ${contentOffset}px)`,
-          height: `calc(73vh - ${contentOffset}px)`,
+          top: "27vh",
+          height: "73vh",
           transform: `translateY(-${currentIndex * 100}%)`,
-          transition:
-            "transform 700ms ease-in-out, top 500ms ease-in-out, height 500ms ease-in-out",
+          zIndex: 10,
         }}
       >
         {/* All content sections */}
