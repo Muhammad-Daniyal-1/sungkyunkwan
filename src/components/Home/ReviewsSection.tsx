@@ -350,8 +350,8 @@ export default function ReviewsSection() {
                 >
                   {/* ← 지금 슬라이드에 보여줄 작가 데이터 */}
                   {(() => {
-                    const author = tabsData[activeTab][currentIndex];
-                    const month = new Date(author.date).getMonth() + 1;
+                    // const author = tabsData[activeTab][currentIndex];
+                    // const month = new Date(author.date).getMonth() + 1;
                     return (
                       <div className="grid grid-cols-3 gap-6">
                         <div>

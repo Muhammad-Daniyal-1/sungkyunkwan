@@ -9,7 +9,6 @@ import HeroSection from "@/components/Home/HeroSection";
 import ResearchSection from "@/components/Home/ResearchSection";
 import TrendsSection from "@/components/Home/TrendsSection";
 import ReviewsSection from "@/components/Home/ReviewsSection";
-import BestReviewSection from "@/components/Home/BestReviewSection";
 import LoveProjectSection from "@/components/Home/LoveProjectSection";
 import InfoSection from "@/components/Home/InfoSection";
 import Footer from "@/components/UI/Footer/Footer";
