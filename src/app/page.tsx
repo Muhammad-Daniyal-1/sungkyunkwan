@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import TopBar from "@/components/UI/Header/TopBar";
 import MegaMenu from "@/components/UI/Header/MegaMenu";
-import SideMenuBar from "@/components/Home/SideMenuBar";
+import SideMenuBar from "@/components/UI/SideMenuBar";
 import SearchBox from "@/components/Home/SearchBox";
 import HeroSection from "@/components/Home/HeroSection";
 import ResearchSection from "@/components/Home/ResearchSection";
@@ -13,6 +13,7 @@ import BestReviewSection from "@/components/Home/BestReviewSection";
 import LoveProjectSection from "@/components/Home/LoveProjectSection";
 import InfoSection from "@/components/Home/InfoSection";
 import Footer from "@/components/UI/Footer/Footer";
+import RightSidebar from "@/components/UI/RightSidebar";
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -153,6 +154,8 @@ export default function Home() {
         activeSection={sections[currentIndex]?.id}
         onSectionClick={handleSectionClick}
       />
+
+      <RightSidebar />
 
       {/* Sections container with transform for transitions */}
       <div

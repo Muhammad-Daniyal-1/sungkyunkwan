@@ -112,6 +112,12 @@ section {
   animation-delay: 0.3s;
 }
 
+@media (min-width: 1600px) {
+  .right-8-percent {
+    right: 8%;
+  }
+}
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
 

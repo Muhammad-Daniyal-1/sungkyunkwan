@@ -69,7 +69,7 @@ function MegaMenu() {
 
         {/* Submenu rendered */}
         <div
-          className={`absolute left-0 right-0 top-full w-screen max-w-[1520px] mx-auto px-10 z-[9999999] transition-all duration-300 transform ${
+          className={`absolute left-0 right-0 top-full w-screen max-w-[1440px] mx-auto px-10 z-[9999999] transition-all duration-300 transform ${
             activeIndex !== null
               ? "opacity-100 translate-y-0 visible"
               : "opacity-0 -translate-y-2 invisible"

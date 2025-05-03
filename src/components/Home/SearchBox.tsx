@@ -78,15 +78,15 @@ export default function SearchBox() {
           <button onClick={handlePrev}>
             <IoChevronBack size={24} />
           </button>
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-w-[700px] overflow-x-auto">
             {getVisibleItems().map(({ text, isActive }) => (
               <motion.button
                 key={text}
                 onClick={() => alert(`Clicked: ${text}`)}
-                className={`px-3 py-2 whitespace-nowrap transition-all text-xs duration-300 ${
+                className={`px-3 py-2 whitespace-nowrap transition-all text-xs duration-500 ${
                   isActive
-                    ? "text-primary font-semibold scale-105"
-                    : "text-[#CDD2E0]"
+                    ? "text-primary font-semibold scale-105 ease-in-out transition-all duration-500"
+                    : "text-[#CDD2E0] ease-in-out transition-all duration-500"
                 }`}
               >
                 {text}
