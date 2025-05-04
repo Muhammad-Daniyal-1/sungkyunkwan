@@ -171,93 +171,89 @@ export default function Home() {
   return (
     <>
       {/* Desktop Version with Animations */}
-      {isDesktop ? (
-        <div className="h-screen w-screen overflow-hidden">
-          <div className="w-full fixed top-0 left-0 right-0 z-50">
-            <div
-              className="w-full transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateY(${scrollOffset}px)` }}
-            >
-              <TopBar />
+      {/* {isDesktop ? ( */}
+      <div className="h-screen w-screen overflow-hidden hidden xl:block">
+        <div className="w-full fixed top-0 left-0 right-0 z-50">
+          <div
+            className="w-full transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateY(${scrollOffset}px)` }}
+          >
+            <TopBar />
 
-              <div className="bg-white">
-                <MegaMenu />
-                <div className="px-20 mx-auto max-w-[1440px]">
-                  <SearchBox />
-                  {/* <MobileSearchBox /> */}
-                </div>
+            <div className="bg-white">
+              <MegaMenu />
+              <div className="px-20 mx-auto max-w-[1440px]">
+                <SearchBox />
+                {/* <MobileSearchBox /> */}
               </div>
             </div>
           </div>
-
-          <SideMenuBar
-            activeSection={sections[currentIndex]?.id}
-            onSectionClick={handleSectionClick}
-          />
-
-          <RightSidebar />
-
-          {/* Sections container with transform for transitions */}
-          <div
-            className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
-            style={{
-              top: "27vh",
-              height: "73vh",
-              transform: `translateY(-${currentIndex * 100}%)`,
-              zIndex: 10,
-            }}
-          >
-            {/* All content sections */}
-            {sections.map((section, index) => (
-              <div
-                key={section.id}
-                id={section.id}
-                className="h-full w-full absolute top-0 left-0 px-20"
-                style={{
-                  transform: `translateY(${index * 100}%)`,
-                }}
-              >
-                {section.component}
-              </div>
-            ))}
-          </div>
-
-          {/* Footer section - appears as last section */}
-          <div
-            className="absolute left-0 right-0 w-full transition-transform duration-700 ease-in-out"
-            style={{
-              top: "100vh",
-              transform: `translateY(${
-                currentIndex === sections.length - 1 ? "-100%" : "0"
-              })`,
-              zIndex: 10,
-            }}
-          >
-            <Footer />
-          </div>
         </div>
-      ) : (
-        /* Mobile Version with Normal Scrolling */
-        <div className="mobile-sections-container">
-          <MobileHeader />
-          <div className="px-4 sm:px-6 md:px-8">
-            <MobileSearchBox />
 
-            {/* Render all sections in normal flow for mobile */}
-            {sections.map((section) => (
-              <section
-                key={section.id}
-                id={section.id}
-                className="py-8 md:py-12"
-              >
-                {section.component}
-              </section>
-            ))}
-          </div>
-          {/* Mobile Footer */}
-          <MobileFooter />
+        <SideMenuBar
+          activeSection={sections[currentIndex]?.id}
+          onSectionClick={handleSectionClick}
+        />
+
+        <RightSidebar />
+
+        {/* Sections container with transform for transitions */}
+        <div
+          className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
+          style={{
+            top: "27vh",
+            height: "73vh",
+            transform: `translateY(-${currentIndex * 100}%)`,
+            zIndex: 10,
+          }}
+        >
+          {/* All content sections */}
+          {sections.map((section, index) => (
+            <div
+              key={section.id}
+              id={section.id}
+              className="h-full w-full absolute top-0 left-0 px-20"
+              style={{
+                transform: `translateY(${index * 100}%)`,
+              }}
+            >
+              {section.component}
+            </div>
+          ))}
         </div>
-      )}
+
+        {/* Footer section - appears as last section */}
+        <div
+          className="absolute left-0 right-0 w-full transition-transform duration-700 ease-in-out"
+          style={{
+            top: "100vh",
+            transform: `translateY(${
+              currentIndex === sections.length - 1 ? "-100%" : "0"
+            })`,
+            zIndex: 10,
+          }}
+        >
+          <Footer />
+        </div>
+      </div>
+      {/* ) : ( */}
+      {/* /* Mobile Version with Normal Scrollingw */}
+      <div className="mobile-sections-container xl:hidden">
+        <MobileHeader />
+        <div className="px-4 sm:px-6 md:px-8">
+          <MobileSearchBox />
+
+          {/* Render all sections in normal flow for mobile */}
+          {sections.map((section) => (
+            <section key={section.id} id={section.id} className="py-8 md:py-12">
+              {section.component}
+            </section>
+          ))}
+        </div>
+        {/* Mobile Footer */}
+        <MobileFooter />
+      </div>
+      {/* )} */}
     </>
   );
 }
