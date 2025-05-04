@@ -66,11 +66,13 @@ export default function ResearchSection() {
   const tabsData = [data, recentData];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-24">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 xl:mt-24">
       <div className="md:col-span-1 bg-white p-4 ">
         <h2 className="text-lg font-bold mb-2">SKKU </h2>
-        <p className="text-3xl font-bold">Research</p>
-        <p className="text-[#8188A1] mt-3">+ 더보기</p>
+        <div className="flex justify-between items-end lg:items-start lg:flex-col">
+          <p className="text-3xl font-bold">Research</p>
+          <p className="text-[#8188A1] mt-3">+ 더보기</p>
+        </div>
         <p className="text-md text-gray mt-10">
           최근 성균관대학교에서 발행한 신규 논문입니다.
         </p>
@@ -78,7 +80,7 @@ export default function ResearchSection() {
 
       <div className="md:col-span-4 relative">
         {/* Tabs navigation */}
-        <div className="flex mb-6">
+        <div className="hidden md:flex mb-6">
           {tabs.map((tab, index) => (
             <div key={index} className="relative">
               <button
@@ -95,13 +97,29 @@ export default function ResearchSection() {
                     ? "bg-secondary w-full"
                     : "bg-transparent w-0"
                 }`}
-              ></div>
+              />
             </div>
           ))}
         </div>
 
+        <div className="grid grid-cols-2 gap-3 mb-6 md:hidden">
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveTab(index)}
+              className={`py-2 rounded-lg border text-sm font-medium transition-colors duration-300 ${
+                activeTab === index
+                  ? "bg-secondary text-white border-secondary"
+                  : "bg-white text-gray-600 border-[#E2EAE8]"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
         {/* Tab content with smooth transition */}
-        <div className="grid grid-cols-4 gap-3 transition-all duration-700 ease-in-out">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 transition-all duration-700 ease-in-out">
           {tabsData[activeTab].map((item) => (
             <div
               key={item.id}

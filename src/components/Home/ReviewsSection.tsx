@@ -7,8 +7,11 @@ import MessageIcon from "@/assets/Svgs/MessageIcon";
 import ReviewLogoIcon from "@/assets/Svgs/ReviewLogoIcon";
 import WriteReviewIcon from "@/assets/Svgs/WriteReviewIcon";
 import Image from "next/image";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineArrowRightAlt,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+} from "react-icons/md";
 
 // Sample data for the first tab (Best Reviews)
 const bestReviewsData = [
@@ -125,46 +128,61 @@ export default function ReviewsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const tabs = ["베스트 리뷰", "리뷰 작가"];
   const tabsData = [bestReviewsData, reviewAuthorsData];
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < tabsData[activeTab].length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
+  const handlePrevious = () =>
+    currentIndex > 0 && setCurrentIndex((i) => i - 1);
+  const handleNext = () =>
+    currentIndex < tabsData[activeTab].length - 1 &&
+    setCurrentIndex((i) => i + 1);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-24">
-      <div className="md:col-span-1 bg-white p-4 ">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 lg:mt-24">
+      {/* ---------- LEFT COLUMN ---------- */}
+      <div className="md:col-span-1 bg-white p-4">
         <p>오거서가 선정한</p>
         <p className="text-3xl font-bold">
           베스트 리뷰
-          <br />& 리뷰 작가
+          <br className="hidden md:block" /> & 리뷰 작가
         </p>
-        <div className="mt-8">
-          {tabs.map((tab, index) => (
+
+        {/* mobile (text‑only) buttons */}
+        <div className="grid grid-cols-2 gap-3 mt-6 md:hidden">
+          {tabs.map((tab, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setActiveTab(i);
+                setCurrentIndex(0);
+              }}
+              className={`py-2 rounded-lg border text-sm font-medium transition-colors duration-300 ${
+                activeTab === i
+                  ? "bg-secondary text-white border-secondary"
+                  : "bg-white text-gray-600 border-[#E2EAE8]"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* desktop icon list */}
+        <div className="mt-8 hidden md:block">
+          {tabs.map((tab, i) => (
             <div
-              key={index}
+              key={i}
               className="flex items-center gap-5 border-b border-[#E2EAE8] p-4 cursor-pointer"
               onClick={() => {
-                setActiveTab(index);
-                setCurrentIndex(0); // Reset index when changing tabs
+                setActiveTab(i);
+                setCurrentIndex(0);
               }}
             >
-              {index === 0 ? (
+              {i === 0 ? (
                 <CrownIcon isActive={activeTab === 0} />
               ) : (
                 <WriteReviewIcon isActive={activeTab === 1} />
               )}
-              <p
-                className={activeTab === index ? "text-black" : "text-gray-500"}
-              >
+              <p className={activeTab === i ? "text-black" : "text-gray-500"}>
                 {tab}
               </p>
               <MdOutlineArrowRightAlt size={24} />
@@ -173,11 +191,23 @@ export default function ReviewsSection() {
         </div>
       </div>
 
+      {/* ---------- RIGHT PANEL ---------- */}
       <div className="md:col-span-4 relative">
+        {/* mobile header showing active icon + label */}
+        <div className="flex items-center gap-2 mb-4 md:hidden">
+          {activeTab === 0 ? (
+            <CrownIcon isActive />
+          ) : (
+            <WriteReviewIcon isActive />
+          )}
+          <h3 className="text-lg font-bold">{tabs[activeTab]}</h3>
+        </div>
+
         {activeTab === 0 ? (
-          /* First Tab - Vertical Slider View */
-          <div className="flex items-center gap-2">
-            <div className="flex flex-col justify-between items-center mb-2 gap-3">
+          /* ----- TAB 1 : Vertical slider ----- */
+          <div className="flex w-full lg:items-center flex-col-reverse lg:flex-row gap-2">
+            {/* up/down buttons */}
+            <div className="flex flex-row justify-center lg:flex-col items-center gap-5">
               <button
                 className="p-2 rounded-full border border-[#E2EAE8] hover:bg-gray-100 transition-colors"
                 onClick={handlePrevious}
@@ -207,7 +237,7 @@ export default function ReviewsSection() {
               </button>
             </div>
 
-            {/* Vertical slider with Framer Motion */}
+            {/* slider */}
             <div className="overflow-hidden" ref={containerRef}>
               <AnimatePresence mode="wait">
                 <motion.div
@@ -218,7 +248,7 @@ export default function ReviewsSection() {
                   transition={{ duration: 0.7, ease: "easeInOut" }}
                   className="grid grid-cols-1 md:grid-cols-5 gap-6"
                 >
-                  <div>
+                  <div className="">
                     <Image
                       src={tabsData[activeTab][currentIndex].bookImage}
                       alt="review-book"
@@ -305,9 +335,10 @@ export default function ReviewsSection() {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            {/* ← 네비게이션 (위/아래 화살표 + 페이지 표시) */}
-            <div className="flex flex-col justify-between items-center mb-2 gap-3">
+          /* ----- TAB 2 : Review–author grid ----- */
+          <div className="flex w-full lg:items-center flex-col-reverse lg:flex-row gap-2">
+            {/* up/down buttons (same as above) */}
+            <div className="flex flex-row justify-center lg:flex-col items-center gap-5">
               <button
                 className="p-2 rounded-full border border-[#E2EAE8] hover:bg-gray-100 transition-colors"
                 onClick={handlePrevious}
@@ -337,7 +368,7 @@ export default function ReviewsSection() {
               </button>
             </div>
 
-            {/* ← 슬라이드 컨테이너 */}
+            {/* author grid */}
             <div className="overflow-hidden flex-1" ref={containerRef}>
               <AnimatePresence mode="wait">
                 <motion.div
@@ -353,7 +384,7 @@ export default function ReviewsSection() {
                     // const author = tabsData[activeTab][currentIndex];
                     // const month = new Date(author.date).getMonth() + 1;
                     return (
-                      <div className="grid grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                           <div className="flex items-center gap-5">
                             <Image

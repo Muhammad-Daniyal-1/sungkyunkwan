@@ -19,7 +19,7 @@ const sampleQuestions = [
   "소프트웨어학과에서 프로젝트는 어떻게 진행되나요?",
 ];
 
-export default function SearchBox() {
+export default function MobileSearchBox() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -117,15 +117,15 @@ export default function SearchBox() {
         onClick={() => setIsFocused(!isFocused)}
         className="mt-6 rounded-2xl border-2 border-primary p-8"
       >
-        <div className="flex justify-between gap-4 w-full">
-          <div className="flex w-full items-center">
-            <div className="px-20">
+        <div className="flex justify-between flex-col md:flex-row gap-4 w-full">
+          <div className="flex flex-col md:flex-row w-full md:items-center">
+            <div className="flex items-center gap-4">
               <label className="inline-flex items-center cursor-pointer">
                 <input type="checkbox" className="sr-only peer" />
                 <div className="relative w-[60px] h-[32px] bg-gray-200 peer-focus:outline-none peer-focus:ring-secondary dark:peer-focus:ring-secondary rounded-full peer dark:bg-gray peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[28px] after:w-[28px] after:transition-all dark:border-gray peer-checked:bg-secondary dark:peer-checked:bg-secondary"></div>
               </label>
+              <p className="whitespace-nowrap mr-6">명륜-ai로 검색</p>
             </div>
-            <p className="whitespace-nowrap mr-6">명륜-ai로 검색</p>
             <input
               type="text"
               className="rounded-2xl w-full p-4 focus-within:border-none focus-within:ring-0 focus-within:ring-offset-0 focus-within:outline-none"
@@ -135,10 +135,12 @@ export default function SearchBox() {
             />
           </div>
 
-          <button className="bg-secondary text-white rounded-full px-4 py-2 flex items-center gap-2 h-auto min-w-[90px]">
-            <IoSearchSharp />
-            검색
-          </button>
+          <div className="flex items-center justify-end">
+            <button className="bg-secondary text-white rounded-full px-4 py-2 flex items-center gap-2 h-auto min-w-[90px]">
+              <IoSearchSharp />
+              검색
+            </button>
+          </div>
         </div>
 
         {/* asRef div: shows on input focus */}
@@ -153,7 +155,7 @@ export default function SearchBox() {
         >
           <div className="border-t border-gray-200 pt-4">
             {" "}
-            <div className="flex gap-2 items-center mb-4">
+            <div className="flex md:flex-row flex-col gap-2 items-center mb-4">
               {" "}
               <Image
                 src="/svgs/festival.svg"
@@ -166,12 +168,12 @@ export default function SearchBox() {
                 우리과(소프트웨어공학과) 친구들은 이런 질문을 많이 했어요!{" "}
               </p>{" "}
             </div>{" "}
-            <div className="grid grid-cols-5 gap-4 items-center">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-center">
               {" "}
               {sampleQuestions.map((question, index) => (
                 <button
                   key={question}
-                  className="text-left p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-blue-50 text-sm transition-all bg-[#E0E2EBB2]"
+                  className="text-left p-3 text-xs lg:text-sm rounded-lg border border-gray-200 hover:border-primary hover:bg-blue-50  transition-all bg-[#E0E2EBB2]"
                 >
                   {" "}
                   {question}{" "}
@@ -189,26 +191,26 @@ export default function SearchBox() {
       {/* suggestionsRef div: shows when input is NOT focused */}
       <div
         ref={suggestionsRef}
-        className="flex mt-4 gap-8 items-start"
+        className="flex flex-col lg:flex-row mt-4 gap-8 items-start"
         style={{ opacity: 1, height: "auto", display: "flex" }}
       >
-        <div className="flex gap-2 items-center w-fit max-w-[95%] mx-auto">
+        <div className="flex lg:flex-row flex-col gap-2 items-center w-fit max-w-[95%] mx-auto">
           <Image
             src="/svgs/festival.svg"
             alt="Festival"
             width={24}
             height={24}
           />
-          <p className="whitespace-nowrap w-fit">
+          <p className="lg:whitespace-nowrap w-fit">
             우리과(소프트웨어공학과) 친구들은 친구들은 이런 질문을 많이 했어요!
           </p>
         </div>
 
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center max-w-[95%] lg:max-w-[55%] overflow-hidden mx-auto">
           <button onClick={handlePrev}>
             <IoChevronBack size={24} />
           </button>
-          <div className="flex gap-2 max-w-[700px] overflow-x-hidden">
+          <div className="flex gap-2 max-w-[90%] overflow-hidden mx-auto">
             {getVisibleItems().map(({ text, isActive }) => (
               <motion.button
                 key={text}

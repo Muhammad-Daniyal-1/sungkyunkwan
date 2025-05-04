@@ -7,7 +7,7 @@ export default function TopBar() {
     <div>
       <header className="w-full flex justify-between items-center px-6 py-3 bg-gray-50 border border-[#EFF2F1]">
         <div className="flex items-center space-x-4">
-          <Image src="/svgs/logo.svg" alt="Logo" width={180} height={50} />
+          <Image src="/svgs/logo.svg" alt="Logo" width={135} height={50} />
         </div>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-4">

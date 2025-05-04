@@ -28,15 +28,17 @@ export default function LoveProjectSection() {
     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-24">
       <div className="md:col-span-1 bg-white p-4 ">
         <p className="text-2xl mb-1">Love Project1</p>
-        <p className="text-3xl font-bold">사랑해서가</p>
-        <p className="text-[#8188A1] mt-3">+ 더보기</p>
+        <div className="flex justify-between items-end lg:items-start lg:flex-col">
+          <p className="text-3xl font-bold">사랑해서가</p>
+          <p className="text-[#8188A1] mt-3">+ 더보기</p>
+        </div>
       </div>
 
       <div className="md:col-span-4 relative">
-        <div className="grid grid-cols-4 gap-3.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {data.map((item) => (
             <div key={item.id} className="">
-              <div className=" relative">
+              <div className="flex justify-center">
                 <Image
                   src={item.img}
                   alt={item.title}

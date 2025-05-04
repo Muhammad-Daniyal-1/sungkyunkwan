@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import TopBar from "@/components/UI/Header/TopBar";
 import MegaMenu from "@/components/UI/Header/MegaMenu";
 import SideMenuBar from "@/components/UI/SideMenuBar";
@@ -13,12 +13,33 @@ import LoveProjectSection from "@/components/Home/LoveProjectSection";
 import InfoSection from "@/components/Home/InfoSection";
 import Footer from "@/components/UI/Footer/Footer";
 import RightSidebar from "@/components/UI/RightSidebar";
+import MobileHeader from "@/components/UI/Header/MobileHeader";
+import MobileSearchBox from "@/components/UI/Header/MobileSearchBox";
+import MobileFooter from "@/components/UI/Footer/MobileFooter";
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  // Check if window width is desktop on mount and resize
+  useLayoutEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    // Initial check
+    checkIsDesktop();
+
+    // Add resize listener
+    window.addEventListener("resize", checkIsDesktop);
+
+    return () => {
+      window.removeEventListener("resize", checkIsDesktop);
+    };
+  }, []);
 
   // Array of sections data with their IDs
   const sections = [
@@ -31,9 +52,10 @@ export default function Home() {
     { id: "info", component: <InfoSection /> },
   ];
 
-  // Handle section change
+  // Handle section change (desktop only)
   const goToSection = (index: number) => {
     if (
+      !isDesktop ||
       isTransitioning ||
       index === currentIndex ||
       index < 0 ||
@@ -60,8 +82,10 @@ export default function Home() {
     }, 700);
   };
 
-  // Handle wheel events
+  // Handle wheel events (desktop only)
   useEffect(() => {
+    if (!isDesktop) return;
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
@@ -72,7 +96,7 @@ export default function Home() {
       goToSection(currentIndex + direction);
     };
 
-    // Handle keyboard navigation
+    // Handle keyboard navigation (desktop only)
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isTransitioning) return;
 
@@ -92,10 +116,12 @@ export default function Home() {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentIndex, isTransitioning]);
+  }, [currentIndex, isTransitioning, isDesktop]);
 
-  // Handle touch events for mobile
+  // Handle touch events for desktop fullpage scrolling (not mobile scrolling)
   useEffect(() => {
+    if (!isDesktop) return;
+
     const handleTouchStart = (e: TouchEvent) => {
       setTouchStart(e.touches[0].clientY);
     };
@@ -121,9 +147,9 @@ export default function Home() {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [currentIndex, isTransitioning, touchStart]);
+  }, [currentIndex, isTransitioning, touchStart, isDesktop]);
 
-  // Handle section navigation from sidebar
+  // Handle section navigation from sidebar (desktop only)
   const handleSectionClick = (sectionId: string) => {
     const index = sections.findIndex((section) => section.id === sectionId);
     if (index !== -1) {
@@ -131,69 +157,107 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="h-screen w-screen overflow-hidden">
-      <div className="w-full fixed top-0 left-0 right-0 z-50">
-        <div
-          className="w-full transition-transform duration-700 ease-in-out"
-          style={{ transform: `translateY(${scrollOffset}px)` }}
-        >
-          <TopBar />
+  // Add class to body based on device type
+  useEffect(() => {
+    if (isDesktop) {
+      document.body.classList.add("desktop-view");
+      document.body.classList.remove("mobile-view");
+    } else {
+      document.body.classList.add("mobile-view");
+      document.body.classList.remove("desktop-view");
+    }
+  }, [isDesktop]);
 
-          <div className="bg-white">
-            <MegaMenu />
-            <div className="px-20 mx-auto max-w-[1440px]">
-              <SearchBox />
+  return (
+    <>
+      {/* Desktop Version with Animations */}
+      {isDesktop ? (
+        <div className="h-screen w-screen overflow-hidden">
+          <div className="w-full fixed top-0 left-0 right-0 z-50">
+            <div
+              className="w-full transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateY(${scrollOffset}px)` }}
+            >
+              <TopBar />
+
+              <div className="bg-white">
+                <MegaMenu />
+                <div className="px-20 mx-auto max-w-[1440px]">
+                  <SearchBox />
+                  {/* <MobileSearchBox /> */}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <SideMenuBar
-        activeSection={sections[currentIndex]?.id}
-        onSectionClick={handleSectionClick}
-      />
+          <SideMenuBar
+            activeSection={sections[currentIndex]?.id}
+            onSectionClick={handleSectionClick}
+          />
 
-      <RightSidebar />
+          <RightSidebar />
 
-      {/* Sections container with transform for transitions */}
-      <div
-        className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
-        style={{
-          top: "27vh",
-          height: "73vh",
-          transform: `translateY(-${currentIndex * 100}%)`,
-          zIndex: 10,
-        }}
-      >
-        {/* All content sections */}
-        {sections.map((section, index) => (
+          {/* Sections container with transform for transitions */}
           <div
-            key={section.id}
-            id={section.id}
-            className="h-full w-full absolute top-0 left-0 px-20"
+            className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
             style={{
-              transform: `translateY(${index * 100}%)`,
+              top: "27vh",
+              height: "73vh",
+              transform: `translateY(-${currentIndex * 100}%)`,
+              zIndex: 10,
             }}
           >
-            {section.component}
+            {/* All content sections */}
+            {sections.map((section, index) => (
+              <div
+                key={section.id}
+                id={section.id}
+                className="h-full w-full absolute top-0 left-0 px-20"
+                style={{
+                  transform: `translateY(${index * 100}%)`,
+                }}
+              >
+                {section.component}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Footer section - appears as last section */}
-      <div
-        className={`absolute left-0 right-0 w-full transition-transform duration-700 ease-in-out`}
-        style={{
-          top: "100vh",
-          transform: `translateY(${
-            currentIndex === sections.length - 1 ? "-100%" : "0"
-          })`,
-          zIndex: 10,
-        }}
-      >
-        <Footer />
-      </div>
-    </div>
+          {/* Footer section - appears as last section */}
+          <div
+            className="absolute left-0 right-0 w-full transition-transform duration-700 ease-in-out"
+            style={{
+              top: "100vh",
+              transform: `translateY(${
+                currentIndex === sections.length - 1 ? "-100%" : "0"
+              })`,
+              zIndex: 10,
+            }}
+          >
+            <Footer />
+          </div>
+        </div>
+      ) : (
+        /* Mobile Version with Normal Scrolling */
+        <div className="mobile-sections-container">
+          <MobileHeader />
+          <div className="px-4 sm:px-6 md:px-8">
+            <MobileSearchBox />
+
+            {/* Render all sections in normal flow for mobile */}
+            {sections.map((section) => (
+              <section
+                key={section.id}
+                id={section.id}
+                className="py-8 md:py-12"
+              >
+                {section.component}
+              </section>
+            ))}
+          </div>
+          {/* Mobile Footer */}
+          <MobileFooter />
+        </div>
+      )}
+    </>
   );
 }
