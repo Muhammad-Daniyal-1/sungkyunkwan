@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import TopBar from "@/components/UI/Header/TopBar";
 import MegaMenu from "@/components/UI/Header/MegaMenu";
 import SideMenuBar from "@/components/UI/SideMenuBar";
-import SearchBox from "@/components/Home/SearchBox"; // We'll modify this component
+import SearchBox, { SearchBoxHandle } from "@/components/Home/SearchBox";
 import HeroSection from "@/components/Home/HeroSection";
 import ResearchSection from "@/components/Home/ResearchSection";
 import TrendsSection from "@/components/Home/TrendsSection";
@@ -17,6 +17,7 @@ import Footer from "@/components/UI/Footer/Footer";
 import RightSidebar from "@/components/UI/RightSidebar";
 
 export default function Home() {
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
@@ -25,6 +26,9 @@ export default function Home() {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const contentContainerRef = useRef(null);
   const searchWrapperRef = useRef(null);
+
+  const searchBoxRef = useRef<SearchBoxHandle>(null);
+
 
   // Array of sections data with their IDs
   const sections = [
@@ -39,7 +43,7 @@ export default function Home() {
 
   // Handle search box expansion state change
   const handleSearchExpandChange = (expanded) => {
-    setIsSearchExpanded(expanded);
+    // setIsSearchExpanded(expanded);
   };
 
   // Handle section change
@@ -48,25 +52,23 @@ export default function Home() {
       isTransitioning ||
       index === currentIndex ||
       index < 0 ||
-      index >= sections.length ||
-      isSearchExpanded
+      index >= sections.length
     ) {
       return;
     }
-
+  
+    // Collapse search box before section transition
+    if (searchBoxRef.current) {
+      searchBoxRef.current.collapse();
+    }
+  
     setIsTransitioning(true);
     setCurrentIndex(index);
-
-    // Update URL hash
     window.history.replaceState(null, "", `#${sections[index].id}`);
-
-    // Calculate scroll offset for header
-    // When at the top (index 0), show the header fully
-    // Otherwise, hide TopBar by sliding entire header up
+  
     const newOffset = index === 0 ? 0 : -70;
     setScrollOffset(newOffset);
-
-    // Reset transition state after animation completes
+  
     setTimeout(() => {
       setIsTransitioning(false);
     }, 700);
@@ -111,7 +113,7 @@ export default function Home() {
     const handleWheel = (e) => {
       e.preventDefault();
 
-      if (isTransitioning || isSearchExpanded) return;
+      if (isTransitioning) return;
 
       // Determine scroll direction and move section accordingly
       const direction = e.deltaY > 0 ? 1 : -1;
@@ -120,7 +122,7 @@ export default function Home() {
 
     // Handle keyboard navigation
     const handleKeyDown = (e) => {
-      if (isTransitioning || isSearchExpanded) return;
+      if (isTransitioning) return;
 
       if (e.key === "ArrowUp" || e.key === "PageUp") {
         e.preventDefault();
@@ -147,7 +149,7 @@ export default function Home() {
     };
 
     const handleTouchMove = (e) => {
-      if (touchStart === null || isTransitioning || isSearchExpanded) return;
+      if (touchStart === null || isTransitioning) return;
 
       const touchEnd = e.touches[0].clientY;
       const diff = touchStart - touchEnd;
@@ -195,8 +197,8 @@ export default function Home() {
               ref={searchWrapperRef}
               className="px-20 mx-auto max-w-[1440px] bg-white"
             >
-              <SearchBox onExpandChange={handleSearchExpandChange} />
-            </div>
+<SearchBox ref={searchBoxRef} onExpandChange={handleSearchExpandChange} />
+</div>
           </div>
         </div>
       </div>
