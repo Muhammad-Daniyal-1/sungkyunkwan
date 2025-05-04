@@ -170,7 +170,7 @@ export default function MobileSearchBox() {
             </div>{" "}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-center">
               {" "}
-              {sampleQuestions.map((question, index) => (
+              {sampleQuestions.map((question) => (
                 <button
                   key={question}
                   className="text-left p-3 text-xs lg:text-sm rounded-lg border border-gray-200 hover:border-primary hover:bg-blue-50  transition-all bg-[#E0E2EBB2]"

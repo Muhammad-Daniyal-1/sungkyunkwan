@@ -168,7 +168,7 @@ export default function SearchBox() {
             </div>{" "}
             <div className="grid grid-cols-5 gap-4 items-center">
               {" "}
-              {sampleQuestions.map((question, index) => (
+              {sampleQuestions.map((question) => (
                 <button
                   key={question}
                   className="text-left p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-blue-50 text-sm transition-all bg-[#E0E2EBB2]"

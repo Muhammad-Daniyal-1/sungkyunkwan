@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { FiLogIn, FiX, FiHeart, FiBell } from "react-icons/fi";
+import { FiLogIn, FiX, FiBell } from "react-icons/fi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
@@ -14,7 +14,7 @@ export default function MobileHeader() {
   const [showMenu, setShowMenu] = useState(false);
 
   // For submenu height animations
-  const submenuRefs = useRef<any[]>([]);
+  const submenuRefs = useRef<[]>([]);
   const childMenuRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
