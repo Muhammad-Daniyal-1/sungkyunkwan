@@ -23,6 +23,7 @@ export default function Home() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [isDesktop, setIsDesktop] = useState(true);
+  const [showFooter, setShowFooter] = useState(false);
 
   // Check if window width is desktop on mount and resize
   useLayoutEffect(() => {
@@ -59,16 +60,25 @@ export default function Home() {
       isTransitioning ||
       index === currentIndex ||
       index < 0 ||
-      index >= sections.length
+      index > sections.length // Modified to allow one extra scroll for footer
     ) {
       return;
     }
 
     setIsTransitioning(true);
-    setCurrentIndex(index);
 
-    // Update URL hash
-    window.history.replaceState(null, "", `#${sections[index].id}`);
+    // Special case for footer section
+    if (index === sections.length) {
+      setShowFooter(true);
+      setCurrentIndex(sections.length - 1); // Keep last section visible
+    } else {
+      setShowFooter(false);
+      setCurrentIndex(index);
+    }
+
+    // Update URL hash - use the appropriate section ID
+    const hashId = index === sections.length ? "footer" : sections[index].id;
+    window.history.replaceState(null, "", `#${hashId}`);
 
     // Calculate scroll offset for header
     // When at the top (index 0), show the header fully
@@ -93,6 +103,13 @@ export default function Home() {
 
       // Determine scroll direction and move section accordingly
       const direction = e.deltaY > 0 ? 1 : -1;
+
+      // If we're showing the footer and trying to go back up
+      if (showFooter && direction === -1) {
+        setShowFooter(false);
+        return;
+      }
+
       goToSection(currentIndex + direction);
     };
 
@@ -102,7 +119,11 @@ export default function Home() {
 
       if (e.key === "ArrowUp" || e.key === "PageUp") {
         e.preventDefault();
-        goToSection(currentIndex - 1);
+        if (showFooter) {
+          setShowFooter(false);
+        } else {
+          goToSection(currentIndex - 1);
+        }
       } else if (e.key === "ArrowDown" || e.key === "PageDown") {
         e.preventDefault();
         goToSection(currentIndex + 1);
@@ -116,7 +137,7 @@ export default function Home() {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentIndex, isTransitioning, isDesktop]);
+  }, [currentIndex, isTransitioning, isDesktop, showFooter]);
 
   // Handle touch events for desktop fullpage scrolling (not mobile scrolling)
   useEffect(() => {
@@ -135,6 +156,14 @@ export default function Home() {
       // Require a minimum movement to trigger section change (to avoid accidental triggers)
       if (Math.abs(diff) > 50) {
         const direction = diff > 0 ? 1 : -1;
+
+        // If we're showing the footer and trying to go back up
+        if (showFooter && direction === -1) {
+          setShowFooter(false);
+          setTouchStart(null);
+          return;
+        }
+
         goToSection(currentIndex + direction);
         setTouchStart(null);
       }
@@ -147,12 +176,19 @@ export default function Home() {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [currentIndex, isTransitioning, touchStart, isDesktop]);
+  }, [currentIndex, isTransitioning, touchStart, isDesktop, showFooter]);
 
   // Handle section navigation from sidebar (desktop only)
   const handleSectionClick = (sectionId: string) => {
+    if (sectionId === "footer") {
+      setShowFooter(true);
+      setCurrentIndex(sections.length - 1);
+      return;
+    }
+
     const index = sections.findIndex((section) => section.id === sectionId);
     if (index !== -1) {
+      setShowFooter(false);
       goToSection(index);
     }
   };
@@ -171,7 +207,6 @@ export default function Home() {
   return (
     <>
       {/* Desktop Version with Animations */}
-      {/* {isDesktop ? ( */}
       <div className="h-screen w-screen overflow-hidden hidden xl:block">
         <div className="w-full fixed top-0 left-0 right-0 z-50">
           <div
@@ -184,14 +219,13 @@ export default function Home() {
               <MegaMenu />
               <div className="px-20 mx-auto max-w-[1440px]">
                 <SearchBox />
-                {/* <MobileSearchBox /> */}
               </div>
             </div>
           </div>
         </div>
 
         <SideMenuBar
-          activeSection={sections[currentIndex]?.id}
+          activeSection={showFooter ? "footer" : sections[currentIndex]?.id}
           onSectionClick={handleSectionClick}
         />
 
@@ -201,7 +235,7 @@ export default function Home() {
         <div
           className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
           style={{
-            top: "27vh",
+            top: showFooter ? "17vh" : "27vh", // Move up when footer is showing
             height: "73vh",
             transform: `translateY(-${currentIndex * 100}%)`,
             zIndex: 10,
@@ -222,22 +256,19 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Footer section - appears as last section */}
+        {/* Footer section - appears below the last section */}
         <div
-          className="absolute left-0 right-0 w-full transition-transform duration-700 ease-in-out"
+          className="absolute left-0 right-0 w-full transition-all duration-700 ease-in-out"
           style={{
-            top: "100vh",
-            transform: `translateY(${
-              currentIndex === sections.length - 1 ? "-100%" : "0"
-            })`,
+            bottom: showFooter ? "0" : "-100vh",
             zIndex: 10,
           }}
         >
           <Footer />
         </div>
       </div>
-      {/* ) : ( */}
-      {/* /* Mobile Version with Normal Scrollingw */}
+
+      {/* Mobile Version with Normal Scrolling */}
       <div className="mobile-sections-container xl:hidden">
         <MobileHeader />
         <div className="px-4 sm:px-6 md:px-8">
@@ -253,7 +284,6 @@ export default function Home() {
         {/* Mobile Footer */}
         <MobileFooter />
       </div>
-      {/* )} */}
     </>
   );
 }
