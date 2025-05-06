@@ -23,7 +23,8 @@ export default function Home() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [isDesktop, setIsDesktop] = useState(true);
-  const [showFooter, setShowFooter] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [footerTransitionProgress, setFooterTransitionProgress] = useState(0);
 
   // Check if window width is desktop on mount and resize
   useLayoutEffect(() => {
@@ -53,46 +54,101 @@ export default function Home() {
     { id: "info", component: <InfoSection /> },
   ];
 
-  // Handle section change (desktop only)
+  // Animated transition for footer
+  const animateFooterTransition = (show: boolean) => {
+    setIsTransitioning(true);
+    setIsFooterVisible(show);
+
+    const startTime = performance.now();
+    const duration = 700;
+    const startValue = show ? 0 : 1;
+    const endValue = show ? 1 : 0;
+
+    const animate = (time: number) => {
+      const elapsedTime = time - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+
+      // Ease in-out cubic function for smoother animation
+      const easedProgress =
+        progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      const currentValue = startValue + (endValue - startValue) * easedProgress;
+      setFooterTransitionProgress(currentValue);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setIsTransitioning(false);
+      }
+    };
+
+    requestAnimationFrame(animate);
+
+    // Update URL hash
+    window.history.replaceState(
+      null,
+      "",
+      show ? "#footer" : `#${sections[currentIndex].id}`
+    );
+  };
+
+  // Handle section change
   const goToSection = (index: number) => {
     if (
       !isDesktop ||
       isTransitioning ||
       index === currentIndex ||
       index < 0 ||
-      index > sections.length // Modified to allow one extra scroll for footer
+      index >= sections.length
     ) {
       return;
     }
 
-    setIsTransitioning(true);
+    // First, hide footer if it's visible
+    if (isFooterVisible) {
+      animateFooterTransition(false);
 
-    // Special case for footer section
-    if (index === sections.length) {
-      setShowFooter(true);
-      setCurrentIndex(sections.length - 1); // Keep last section visible
+      // Wait for footer to finish hiding before changing section
+      setTimeout(() => {
+        setCurrentIndex(index);
+        window.history.replaceState(null, "", `#${sections[index].id}`);
+
+        // Calculate scroll offset for header
+        const newOffset = index === 0 ? 0 : -70;
+        setScrollOffset(newOffset);
+      }, 700);
     } else {
-      setShowFooter(false);
+      setIsTransitioning(true);
+
       setCurrentIndex(index);
+      window.history.replaceState(null, "", `#${sections[index].id}`);
+
+      // Calculate scroll offset for header
+      const newOffset = index === 0 ? 0 : -70;
+      setScrollOffset(newOffset);
+
+      // Reset transition state after animation completes
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 700);
     }
-
-    // Update URL hash - use the appropriate section ID
-    const hashId = index === sections.length ? "footer" : sections[index].id;
-    window.history.replaceState(null, "", `#${hashId}`);
-
-    // Calculate scroll offset for header
-    // When at the top (index 0), show the header fully
-    // Otherwise, hide TopBar by sliding entire header up
-    const newOffset = index === 0 ? 0 : -70;
-    setScrollOffset(newOffset);
-
-    // Reset transition state after animation completes
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 700);
   };
 
-  // Handle wheel events (desktop only)
+  // Handle showing footer
+  const showFooter = () => {
+    if (isTransitioning || isFooterVisible) return;
+    animateFooterTransition(true);
+  };
+
+  // Handle hiding footer
+  const hideFooter = () => {
+    if (isTransitioning || !isFooterVisible) return;
+    animateFooterTransition(false);
+  };
+
+  // Handle wheel events for desktop
   useEffect(() => {
     if (!isDesktop) return;
 
@@ -101,45 +157,77 @@ export default function Home() {
 
       if (isTransitioning) return;
 
-      // Determine scroll direction and move section accordingly
       const direction = e.deltaY > 0 ? 1 : -1;
 
-      // If we're showing the footer and trying to go back up
-      if (showFooter && direction === -1) {
-        setShowFooter(false);
-        return;
+      // Special case for last section and footer
+      if (currentIndex === sections.length - 1) {
+        if (direction > 0 && !isFooterVisible) {
+          // Scroll down from last section shows footer
+          showFooter();
+          return;
+        }
       }
 
-      goToSection(currentIndex + direction);
+      // Special case for footer
+      if (isFooterVisible) {
+        if (direction < 0) {
+          // Scroll up from footer hides footer
+          hideFooter();
+          return;
+        }
+        return; // Ignore further downward scrolls when footer is visible
+      }
+
+      // Normal section navigation
+      const nextIndex = currentIndex + direction;
+      if (nextIndex >= 0 && nextIndex < sections.length) {
+        goToSection(nextIndex);
+      }
     };
 
-    // Handle keyboard navigation (desktop only)
+    window.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, [currentIndex, isTransitioning, isDesktop, isFooterVisible]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    if (!isDesktop) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isTransitioning) return;
 
       if (e.key === "ArrowUp" || e.key === "PageUp") {
         e.preventDefault();
-        if (showFooter) {
-          setShowFooter(false);
-        } else {
+
+        if (isFooterVisible) {
+          hideFooter();
+        } else if (currentIndex > 0) {
           goToSection(currentIndex - 1);
         }
       } else if (e.key === "ArrowDown" || e.key === "PageDown") {
         e.preventDefault();
-        goToSection(currentIndex + 1);
+
+        if (isFooterVisible) {
+          return; // Already at the bottom
+        } else if (currentIndex === sections.length - 1) {
+          showFooter();
+        } else if (currentIndex < sections.length - 1) {
+          goToSection(currentIndex + 1);
+        }
       }
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentIndex, isTransitioning, isDesktop, showFooter]);
+  }, [currentIndex, isTransitioning, isDesktop, isFooterVisible]);
 
-  // Handle touch events for desktop fullpage scrolling (not mobile scrolling)
+  // Handle touch events
   useEffect(() => {
     if (!isDesktop) return;
 
@@ -153,18 +241,27 @@ export default function Home() {
       const touchEnd = e.touches[0].clientY;
       const diff = touchStart - touchEnd;
 
-      // Require a minimum movement to trigger section change (to avoid accidental triggers)
+      // Require a minimum movement to trigger section change
       if (Math.abs(diff) > 50) {
         const direction = diff > 0 ? 1 : -1;
 
-        // If we're showing the footer and trying to go back up
-        if (showFooter && direction === -1) {
-          setShowFooter(false);
-          setTouchStart(null);
-          return;
+        // Handle footer visibility
+        if (
+          direction > 0 &&
+          currentIndex === sections.length - 1 &&
+          !isFooterVisible
+        ) {
+          showFooter();
+        } else if (direction < 0 && isFooterVisible) {
+          hideFooter();
+        } else if (!isFooterVisible) {
+          // Normal section navigation
+          const nextIndex = currentIndex + direction;
+          if (nextIndex >= 0 && nextIndex < sections.length) {
+            goToSection(nextIndex);
+          }
         }
 
-        goToSection(currentIndex + direction);
         setTouchStart(null);
       }
     };
@@ -176,20 +273,39 @@ export default function Home() {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [currentIndex, isTransitioning, touchStart, isDesktop, showFooter]);
+  }, [currentIndex, isTransitioning, touchStart, isDesktop, isFooterVisible]);
 
-  // Handle section navigation from sidebar (desktop only)
+  // Handle section navigation from sidebar
   const handleSectionClick = (sectionId: string) => {
+    if (isTransitioning) return;
+
     if (sectionId === "footer") {
-      setShowFooter(true);
-      setCurrentIndex(sections.length - 1);
+      // Only show footer if on last section
+      if (currentIndex === sections.length - 1) {
+        showFooter();
+      } else {
+        // First go to last section
+        goToSection(sections.length - 1);
+        // Then after transition, show footer
+        setTimeout(() => {
+          showFooter();
+        }, 800);
+      }
       return;
     }
 
     const index = sections.findIndex((section) => section.id === sectionId);
     if (index !== -1) {
-      setShowFooter(false);
-      goToSection(index);
+      if (isFooterVisible) {
+        // Hide footer first, then navigate
+        hideFooter();
+        setTimeout(() => {
+          goToSection(index);
+        }, 800);
+      } else {
+        // Direct navigation
+        goToSection(index);
+      }
     }
   };
 
@@ -203,6 +319,20 @@ export default function Home() {
       document.body.classList.remove("desktop-view");
     }
   }, [isDesktop]);
+
+  // Calculate dynamic styles for footer and content
+  const footerStyle = {
+    bottom: `${-100 * (1 - footerTransitionProgress)}vh`,
+    opacity: footerTransitionProgress,
+    transition: "opacity 700ms ease-in-out",
+  };
+
+  const contentSectionStyle = {
+    top: `${27 - footerTransitionProgress * 10}vh`, // Gradually move content up
+    height: "73vh",
+    transform: `translateY(-${currentIndex * 100}%)`,
+    zIndex: 10,
+  };
 
   return (
     <>
@@ -225,7 +355,9 @@ export default function Home() {
         </div>
 
         <SideMenuBar
-          activeSection={showFooter ? "footer" : sections[currentIndex]?.id}
+          activeSection={
+            isFooterVisible ? "footer" : sections[currentIndex]?.id
+          }
           onSectionClick={handleSectionClick}
         />
 
@@ -233,13 +365,8 @@ export default function Home() {
 
         {/* Sections container with transform for transitions */}
         <div
-          className="absolute left-0 right-0 max-w-[1560px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
-          style={{
-            top: showFooter ? "17vh" : "27vh", // Move up when footer is showing
-            height: "73vh",
-            transform: `translateY(-${currentIndex * 100}%)`,
-            zIndex: 10,
-          }}
+          className="absolute left-0 right-0 max-w-[1560px] mx-auto transition-all duration-700 ease-in-out px-20"
+          style={contentSectionStyle}
         >
           {/* All content sections */}
           {sections.map((section, index) => (
@@ -259,10 +386,7 @@ export default function Home() {
         {/* Footer section - appears below the last section */}
         <div
           className="absolute left-0 right-0 w-full transition-all duration-700 ease-in-out"
-          style={{
-            bottom: showFooter ? "0" : "-100vh",
-            zIndex: 10,
-          }}
+          style={footerStyle}
         >
           <Footer />
         </div>
