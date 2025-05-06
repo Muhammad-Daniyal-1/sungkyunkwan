@@ -80,13 +80,13 @@ export default function ResearchSection() {
 
       <div className="md:col-span-4 relative">
         {/* Tabs navigation */}
-        <div className="hidden md:flex mb-6">
+        <div className="hidden md:flex mb-6 border-b border-[#E2EAE8]">
           {tabs.map((tab, index) => (
-            <div key={index} className="relative">
+            <div key={index} className="relative ">
               <button
                 onClick={() => setActiveTab(index)}
-                className={`pb-2 px-24 border-b border-[#E2EAE8] font-medium text-sm transition-colors duration-700 ease-in-out ${
-                  activeTab === index ? "text-black" : "text-gray-500"
+                className={`pb-2 px-24  font-medium text-base transition-colors duration-700 ease-in-out ${
+                  activeTab === index ? "text-[#2D2F3E]" : "text-gray-500"
                 }`}
               >
                 {tab}

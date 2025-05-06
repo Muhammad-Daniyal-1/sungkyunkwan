@@ -22,7 +22,9 @@ const sampleQuestions = [
 export default function MobileSearchBox() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const asRef = useRef<HTMLDivElement | null>(null);
   const suggestionsRef = useRef<HTMLDivElement | null>(null);
 
@@ -111,34 +113,107 @@ export default function MobileSearchBox() {
     }
   }, [isFocused]);
 
+  /* ---------- outside‑click close ---------- */
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
-    <div>
+    <div ref={containerRef}>
       <div
-        onClick={() => setIsFocused(!isFocused)}
-        className="mt-6 rounded-2xl border-2 border-primary p-8"
+        onClick={(e) => {
+          const el = e.target as HTMLElement;
+          // if the click is NOT on (or inside) an element that says “data‑ignore‑open”
+          if (!el.closest("[data-ignore-open]")) setIsOpen(true);
+        }}
+        className="mt-6 rounded-2xl border-2 border-primary py-3 px-4"
       >
-        <div className="flex justify-between flex-col md:flex-row gap-4 w-full">
-          <div className="flex flex-col md:flex-row w-full md:items-center">
-            <div className="flex items-center gap-4">
-              <label className="inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" />
-                <div className="relative w-[60px] h-[32px] bg-gray-200 peer-focus:outline-none peer-focus:ring-secondary dark:peer-focus:ring-secondary rounded-full peer dark:bg-gray peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[28px] after:w-[28px] after:transition-all dark:border-gray peer-checked:bg-secondary dark:peer-checked:bg-secondary"></div>
-              </label>
-              <p className="whitespace-nowrap mr-6">명륜-ai로 검색</p>
-            </div>
+        <div
+          className={`flex justify-between flex-col md:flex-row gap-4 w-full ${
+            isOpen ? "" : ""
+          }`}
+        >
+          {/* <div className="flex flex-col md:flex-row w-full md:items-center"> */}
+          <div className="flex items-center gap-4">
+            <label
+              className="inline-flex items-center cursor-pointer relative"
+              data-ignore-open
+            >
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={isChecked}
+                onChange={handleToggle}
+              />
+              <div
+                className={`relative w-[65px] h-8 rounded-full transition-all duration-300 flex items-center justify-between px-2 text-xs font-bold text-white ${
+                  isChecked
+                    ? "bg-gradient-to-r from-green-600 to-teal-800"
+                    : "bg-gray-300 dark:bg-gray-700"
+                }`}
+              >
+                <span
+                  className={`z-10 ${
+                    isChecked ? "opacity-100" : "opacity-0"
+                  } transition-opacity duration-300`}
+                >
+                  ON
+                </span>
+                <span
+                  className={`z-10 ${
+                    isChecked ? "opacity-0" : "opacity-100"
+                  } transition-opacity duration-300`}
+                >
+                  OFF
+                </span>
+              </div>
+              <div
+                className={`
+                  absolute top-1 h-6 w-6 rounded-full bg-white transition-all duration-300 ${
+                    isChecked ? "left-[calc(100%-28px)]" : "left-1"
+                  }
+                `}
+              ></div>
+            </label>
+
+            <p
+              className="whitespace-nowrap mr-6 text-[#8188A1]"
+              onClick={() => setIsOpen(true)}
+            >
+              명륜-ai로 검색
+            </p>
+          </div>
+          <div className="flex items-center gap-2 justify-between">
             <input
               type="text"
-              className="rounded-2xl w-full p-4 focus-within:border-none focus-within:ring-0 focus-within:ring-offset-0 focus-within:outline-none"
+              className="rounded-2xl w-full p-4 focus-within:border-none focus-within:ring-0 focus-within:ring-offset-0 focus-within:outline-none placeholder:text-[#B1B7CC]"
               placeholder="키워드나 질문을 입력해 주세요."
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-          </div>
+            {/* </div> */}
 
-          <div className="flex items-center justify-end">
-            <button className="bg-secondary text-white rounded-full px-4 py-2 flex items-center gap-2 h-auto min-w-[90px]">
+            <button
+              className="bg-secondary text-white rounded-xl p-3 "
+              data-ignore-open
+            >
               <IoSearchSharp />
-              검색
             </button>
           </div>
         </div>
@@ -201,8 +276,10 @@ export default function MobileSearchBox() {
             width={24}
             height={24}
           />
-          <p className="lg:whitespace-nowrap w-fit">
-            우리과(소프트웨어공학과) 친구들은 친구들은 이런 질문을 많이 했어요!
+          <p className="lg:whitespace-nowrap w-fit text-center text-[#8188A1] font-semibold">
+            우리과
+            <span className="text-[#2D2F3E]">(소프트웨어공학과)</span>
+            친구들은 친구들은 이런 질문을 많이 했어요!
           </p>
         </div>
 

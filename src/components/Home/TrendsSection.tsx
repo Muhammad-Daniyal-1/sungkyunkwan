@@ -1,9 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import { motion } from "framer-motion";
 
-const tabs = ["대출 Best", "우리과 Best", "학년 Best", "주제별 Trend Best"];
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+
+const tabs = ["대출 Best", "우리과 Best", "학년 Best", "주제별 Trend Best"];
 
 // demo data for each tab (put your real lists here)
 const tabsData = [
@@ -28,8 +35,71 @@ const tabsData = [
   ],
 ];
 
+// Custom hook for media query
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+
+  return matches;
+};
+
 export default function TrendsSection() {
   const [activeTab, setActiveTab] = useState(0);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // Motion variants for animation
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
+  // Book item component
+  const BookItem = ({ item }: { item: (typeof tabsData)[0][number] }) => (
+    <motion.div variants={itemVariants}>
+      <div className="flex justify-center">
+        <div className="relative">
+          <div className="absolute -top-1 -left-1 w-14 h-14 bg-green-500 rounded-tl-sm rounded-t-full rounded-br-full rounded-bl-full flex items-center justify-center">
+            <span className="text-xl font-bold text-white">{item.id}</span>
+          </div>
+          <Image
+            src={item.img}
+            alt={item.title}
+            width={200}
+            height={300}
+            className="rounded-xl border border-[#C6D7D4] w-[300px] h-[400px] lg:max-w-[200px] lg:max-h-[300px]"
+          />
+        </div>
+      </div>
+      <p className="font-bold text-md my-6 text-center">{item.title}</p>
+    </motion.div>
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 xl:mt-24">
@@ -43,7 +113,7 @@ export default function TrendsSection() {
             <br />
             한눈에 보기
           </p>
-          <p className="text-[#8188A1] mt-3">+ 더보기</p>
+          <p className="text-[#8188A1] mt-3 cursor-pointer">+ 더보기</p>
         </div>
         <p className="text-md text-gray mt-10">
           이번 달 가장 많이 대출된
@@ -59,13 +129,13 @@ export default function TrendsSection() {
       {/* right content */}
       <div className="md:col-span-4">
         {/* desktop tab bar */}
-        <div className="hidden md:flex mb-6">
+        <div className="hidden md:flex mb-6 border-b border-[#E2EAE8]">
           {tabs.map((tab, i) => (
             <div key={i} className="relative">
               <button
                 onClick={() => setActiveTab(i)}
-                className={`pb-2 px-10 border-b border-[#E2EAE8] font-medium text-sm transition-colors duration-700 ease-in-out ${
-                  activeTab === i ? "text-black" : "text-gray-500"
+                className={`pb-2 px-16 font-medium text-base transition-colors duration-700 ease-in-out ${
+                  activeTab === i ? "text-[#2D2F3E]" : "text-gray-500"
                 }`}
               >
                 {tab}
@@ -96,30 +166,38 @@ export default function TrendsSection() {
           ))}
         </div>
 
-        {/* tab content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 transition-all duration-700 ease-in-out">
-          {tabsData[activeTab].map((item) => (
-            <div key={item.id}>
-              <div className="flex justify-center">
-                <div className="relative">
-                  <div className="absolute -top-1 -left-1 w-14 h-14 bg-green-500 rounded-tl-sm rounded-t-full rounded-br-full rounded-bl-full flex items-center justify-center">
-                    <span className="text-xl font-bold text-white">
-                      {item.id}
-                    </span>
-                  </div>
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    width={200}
-                    height={300}
-                    className="rounded-xl border border-[#C6D7D4] w-[300px] h-[400px] lg:max-w-[200px] lg:max-h-[300px]"
-                  />
-                </div>
-              </div>
-              <p className="font-bold text-md my-6 text-center">{item.title}</p>
-            </div>
-          ))}
-        </div>
+        {/* tab content - conditional render based on screen size */}
+        {isMobile ? (
+          // Mobile view - Swiper slider
+          <div className="relative px-2">
+            <Swiper
+              modules={[Pagination]}
+              spaceBetween={20}
+              slidesPerView={1.5}
+              loop={true}
+              pagination={{ clickable: true }}
+              className="w-full"
+            >
+              {tabsData[activeTab].map((item) => (
+                <SwiperSlide key={item.id}>
+                  <BookItem item={item} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        ) : (
+          // Desktop view - Grid layout
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 transition-all duration-700 ease-in-out"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {tabsData[activeTab].map((item) => (
+              <BookItem key={item.id} item={item} />
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
   );

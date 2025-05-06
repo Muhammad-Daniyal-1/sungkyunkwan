@@ -50,7 +50,7 @@ function MegaMenu() {
         onMouseLeave={() => setActiveIndex(null)}
         onMouseEnter={() => {}}
       >
-        <ul className="flex justify-center px-14 gap-[5rem] text-[#B1B7CC] border-b-1">
+        <ul className="flex justify-center px-14 gap-[5rem] text-[#8188a1] border-b-1">
           {navItems.map((item, index) => (
             <li key={index} className="py-5">
               <a
@@ -69,7 +69,7 @@ function MegaMenu() {
 
         {/* Submenu rendered */}
         <div
-          className={`absolute left-0 right-0 top-full w-screen max-w-[1440px] mx-auto px-10 z-[9999999] transition-all duration-300 transform ${
+          className={`absolute left-0 right-0 top-full w-screen max-w-[1500px] mx-auto px-10 z-[9999999] transition-all duration-300 transform ${
             activeIndex !== null
               ? "opacity-100 translate-y-0 visible"
               : "opacity-0 -translate-y-2 invisible"

@@ -248,7 +248,7 @@ export default function ReviewsSection() {
                   transition={{ duration: 0.7, ease: "easeInOut" }}
                   className="grid grid-cols-1 md:grid-cols-5 gap-6"
                 >
-                  <div className="">
+                  <div className="flex justify-center border-y border-[#E2EAE8] lg:border-none py-5 lg:py-0">
                     <Image
                       src={tabsData[activeTab][currentIndex].bookImage}
                       alt="review-book"

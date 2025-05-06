@@ -217,7 +217,7 @@ export default function Home() {
 
             <div className="bg-white">
               <MegaMenu />
-              <div className="px-20 mx-auto max-w-[1440px]">
+              <div className="px-20 mx-auto max-w-[1560px]">
                 <SearchBox />
               </div>
             </div>
@@ -233,7 +233,7 @@ export default function Home() {
 
         {/* Sections container with transform for transitions */}
         <div
-          className="absolute left-0 right-0 max-w-[1440px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
+          className="absolute left-0 right-0 max-w-[1560px] mx-auto transition-transform duration-700 ease-in-out px-20 z-10"
           style={{
             top: showFooter ? "17vh" : "27vh", // Move up when footer is showing
             height: "73vh",
@@ -273,17 +273,21 @@ export default function Home() {
         <MobileHeader />
         <div className="px-4 sm:px-6 md:px-8">
           <MobileSearchBox />
-
-          {/* Render all sections in normal flow for mobile */}
-          {sections.map((section) => (
+        </div>
+        <div className="py-8 md:py-12">
+          <HeroSection />
+        </div>
+        {/* Render all sections in normal flow for mobile */}
+        <div className="px-4 sm:px-6 md:px-8">
+          {sections.slice(1).map((section) => (
             <section key={section.id} id={section.id} className="py-8 md:py-12">
               {section.component}
             </section>
           ))}
         </div>
-        {/* Mobile Footer */}
-        <MobileFooter />
       </div>
+      {/* Mobile Footer */}
+      <MobileFooter />
     </>
   );
 }

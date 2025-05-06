@@ -8,7 +8,7 @@ function Nav6() {
   const navData = [
     {
       title: '발전기금',
-      items: ['. 모금안내', '. 참여하기', '. 기부자 예우'],
+      items: [],
     },
   ];
 
@@ -23,8 +23,8 @@ function Nav6() {
           >
             <button
               className={`duration-300 w-[400px] ${hoveredGroupIndex === groupIndex
-                  ? 'bg-[#ADDD1D]'
-                  : 'bg-[#8188A180] hover:bg-[#ADDD1D]'
+                ? 'bg-[#ADDD1D]'
+                : 'bg-[#8188A180] hover:bg-[#ADDD1D]'
                 } p-[16px] text-start font-bold text-[1rem] font-pretendard`}
             >
               {group.title}

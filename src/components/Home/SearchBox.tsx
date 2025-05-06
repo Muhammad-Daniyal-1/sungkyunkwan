@@ -20,9 +20,9 @@ const sampleQuestions = [
 ];
 export default function SearchBox() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isOpen, setIsOpen] = useState(false); // ① rename
+  const [isOpen, setIsOpen] = useState(false);
 
-  const containerRef = useRef<HTMLDivElement | null>(null); // ② for outside‑click
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const asRef = useRef<HTMLDivElement | null>(null);
   const suggestionsRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -115,40 +115,76 @@ export default function SearchBox() {
     }
   }, [isOpen]);
 
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+  };
+
   /* ---------- render ---------- */
 
   return (
     <div ref={containerRef}>
       {/* search wrapper */}
       <div
-        className="mt-6 rounded-2xl border-2 border-primary p-8"
+        className="mt-6 rounded-2xl border-2 border-primary px-8 py-6"
         onClick={(e) => {
           const el = e.target as HTMLElement;
           // if the click is NOT on (or inside) an element that says “data‑ignore‑open”
           if (!el.closest("[data-ignore-open]")) setIsOpen(true);
         }}
       >
-        <div className="flex justify-between gap-4 w-full">
+        <div className="flex justify-between items-center gap-4 w-full">
           {/* left side */}
-          <div className="flex w-full items-center">
+          <div className="flex w-full items-center pr-4">
             {/* toggle – stays inside without closing */}
-            <div className="px-20">
-              <label
-                className="inline-flex items-center cursor-pointer"
-                data-ignore-open
+            <label className="inline-flex items-center cursor-pointer relative">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={isChecked}
+                onChange={handleToggle}
+              />
+              <div
+                className={`relative w-16 h-9 rounded-full transition-all duration-300 flex items-center justify-between px-2 text-xs font-bold text-white ${
+                  isChecked
+                    ? "bg-gradient-to-r from-green-600 to-teal-800"
+                    : "bg-gray-300 dark:bg-gray-700"
+                }`}
               >
-                <input type="checkbox" className="sr-only peer" />
-                <div className="relative w-[60px] h-[32px] bg-gray-200 peer-focus:outline-none peer-focus:ring-secondary dark:peer-focus:ring-secondary rounded-full peer dark:bg-gray peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[28px] after:w-[28px] after:transition-all dark:border-gray peer-checked:bg-secondary dark:peer-checked:bg-secondary"></div>
-              </label>
-            </div>
+                <span
+                  className={`z-10 ${
+                    isChecked ? "opacity-100" : "opacity-0"
+                  } transition-opacity duration-300`}
+                >
+                  ON
+                </span>
+                <span
+                  className={`z-10 ${
+                    isChecked ? "opacity-0" : "opacity-100"
+                  } transition-opacity duration-300`}
+                >
+                  OFF
+                </span>
+              </div>
+              <div
+                className={`
+                  absolute top-1 h-7 w-7 rounded-full bg-white transition-all duration-300 ${
+                    isChecked ? "left-[calc(100%-32px)]" : "left-1"
+                  }
+                `}
+              ></div>
+            </label>
 
-            <p className="whitespace-nowrap mr-6">명륜-ai로 검색</p>
+            <p className="whitespace-nowrap m-4 text-[#8188A1] text-sm">
+              명륜-ai로 검색
+            </p>
 
             {/* input */}
             <input
               ref={inputRef}
               type="text"
-              className="rounded-2xl w-full p-4 focus:outline-none"
+              className="rounded-2xl w-full p-4 focus:outline-none text-base"
               placeholder="키워드나 질문을 입력해 주세요."
               onFocus={() => setIsOpen(true)} // ⑤ open only
             />
@@ -202,12 +238,12 @@ export default function SearchBox() {
       {/* ---------- collapsed suggestions ---------- */}
       <div
         ref={suggestionsRef}
-        className="flex mt-4 gap-8 items-start"
+        className="flex mt-4 gap-8 items-center"
         style={{ height: "auto", opacity: 1 }}
       >
-        <div className="flex gap-2 items-center w-fit max-w-[95%] mx-auto">
+        <div className="flex gap-2 items-center justify-start">
           <Image src="/svgs/festival.svg" alt="" width={24} height={24} />
-          <p className="whitespace-nowrap">
+          <p className="whitespace-nowrap text-[#8188A1] text-sm">
             우리과(소프트웨어공학과) 친구들은 이런 질문을 많이 했어요!
           </p>
         </div>
@@ -216,11 +252,11 @@ export default function SearchBox() {
           <button onClick={handlePrev}>
             <IoChevronBack size={24} />
           </button>
-          <div className="flex gap-2 max-w-[700px] overflow-x-hidden">
+          <div className="flex gap-2 max-w-[800px] overflow-x-hidden">
             {getVisibleItems().map(({ text, isActive }) => (
               <motion.button
                 key={text}
-                onMouseDown={(e) => e.preventDefault()} // keep outside blur
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => (inputRef.current!.value = text)}
                 className={`px-3 py-2 whitespace-nowrap text-xs transition-all ${
                   isActive

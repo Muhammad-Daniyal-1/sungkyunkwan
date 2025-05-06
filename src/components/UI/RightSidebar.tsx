@@ -39,7 +39,7 @@ const data = [
 
 export default function RightSidebar() {
   return (
-    <div className="fixed right-0 right-8-percent top-1/2 translate-y-[-45%] shadow-[4px_4px_4px_0_rgba(0,0,0,0.10) z-50">
+    <div className="fixed right-0 top-1/2 translate-y-[-45%] shadow-[4px_4px_4px_0_rgba(0,0,0,0.10) z-50">
       <div className="flex flex-col gap-4 items-center justify-center">
         <ul className="flex flex-col gap-3 items-center justify-center text-white bg-primary py-6 rounded-2xl">
           {data.map((item) => (

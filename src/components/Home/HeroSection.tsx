@@ -1,17 +1,19 @@
 import Image from "next/image";
 import { MdPhone } from "react-icons/md";
+import { FaRegClock } from "react-icons/fa6";
+import { FaPhoneAlt } from "react-icons/fa";
 
 export default function HeroSection() {
   return (
-    <div className="relative p-4 xl:p-8 rounded-xl xl:mt-28 overflow-hidden">
+    <div className="relative md:p-4 xl:p-8 md:rounded-xl xl:mt-28 overflow-hidden">
       {/* Background image and overlay */}
       <div
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: 'url("/images/hero-bg.jpg")',
           backgroundSize: "cover",
-          backgroundPosition: "bottom",
-          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          // backgroundRepeat: "no-repeat",
         }}
       />
       <div className="absolute inset-0 bg-[#000E0380] z-0" />
@@ -32,25 +34,25 @@ export default function HeroSection() {
           </p>
 
           <div className="mt-12 xl:mt-28 grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4 justify-center lg:justify-start">
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-end sm:justify-center">
               <div className="flex flex-col items-center justify-center bg-[#0A00464D] rounded-full border border-white w-[120px] h-[120px] p-4">
                 <p className="text-secondary-main text-sm">연체 대출건</p>
                 <p className="text-2xl">2건</p>
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-start sm:justify-center">
               <div className="flex flex-col items-center justify-center bg-[#0A00464D] rounded-full border border-white w-[120px] h-[120px] p-4">
                 <p className="text-secondary-main text-sm">자주 예약</p>
                 <p className="text-2xl">TP룸1</p>
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-end sm:justify-center">
               <div className="flex flex-col items-center justify-center bg-[#0A00464D] rounded-full border border-white w-[120px] h-[120px] p-4">
                 <p className="text-secondary-main text-sm">제 2열람실</p>
                 <p className="text-2xl">158석 </p>
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-start sm:justify-center">
               <div className="flex flex-col items-center justify-center bg-[#0A00464D] rounded-full border border-white w-[120px] h-[120px] p-4">
                 <p className="text-secondary-main text-sm">주문 도서 도착</p>
                 <p className="text-2xl">북사이렌</p>
@@ -58,23 +60,25 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row xl:flex-col xl:gap-4">
+        <div className="flex flex-col lg:flex-row xl:flex-col xl:gap-4 bg-[#011205] md:bg-transparent p-3">
           {/* block #1 */}
-          <div className="py-4 px-6 rounded-xl bg-[#FFFFFFCC] mb-6 lg:mb-0 text-black lg:w-1/2 xl:w-full">
+          <div className="py-4 px-3 md:px-6 rounded-xl bg-[#FFFFFFCC] mb-6 lg:mb-0 text-black lg:w-1/2 xl:w-full relative overflow-hidden">
+            <FaRegClock className="text-white absolute -top-1 -left-2 z-0 md:-z-10 text-5xl md:text-6xl" />
             <div className="flex justify-between mb-2">
-              <p className="font-bold text-sm xl:text-lg">
+              <p className="font-bold text-sm xl:text-lg z-20">
                 학술정보관 운영시간
               </p>
               <p className="text-[#8188A1] text-sm xl:text-base">+ 더보기</p>
             </div>
-            <div className="flex items-center mb-3">
+            <div className="flex items-center mb-3 z-20">
               <Image
                 src="/svgs/date_range.svg"
                 alt="Date Range"
                 width={24}
                 height={24}
+                className="hidden md:block "
               />
-              <p className="text-sm xl:text-base ml-2">
+              <p className="text-sm xl:text-base ml-2 z-20">
                 오늘 12월9일(월)은{" "}
                 <span className="text-red font-bold">09:00 ~ 21:40</span> 까지
                 운영됩니다.
@@ -105,9 +109,10 @@ export default function HeroSection() {
           </div>
 
           {/*block #2 */}
-          <div className="py-4 px-6 rounded-xl bg-[#FFFFFFCC] text-black lg:w-1/2 xl:w-full">
+          <div className="py-4 px-3 md:px-6 rounded-xl bg-[#FFFFFFCC] text-black lg:w-1/2 xl:w-full relative overflow-hidden">
+            <FaPhoneAlt className="text-white absolute md:-top-1 md:-left-2 top-0 left-0 z-0 md:-z-10 text-5xl md:text-6xl" />
             <div className="flex justify-between mb-3">
-              <p className="font-bold text-sm xl:text-lg">주요전화번호 </p>
+              <p className="font-bold text-sm xl:text-lg z-20">주요전화번호 </p>
               <p className="text-[#8188A1] text-sm xl:text-base">+ 더보기</p>
             </div>
             <div className="flex items-center mb-3">
@@ -116,8 +121,9 @@ export default function HeroSection() {
                 alt="Date Range"
                 width={24}
                 height={24}
+                className="hidden md:block "
               />
-              <p className="text-xs xl:text-base ml-2">
+              <p className="text-xs xl:text-base ml-2 z-20">
                 오늘 12월9일(월)은{" "}
                 <span className="text-red font-bold">09:00 ~ 21:40</span> 까지
                 운영됩니다.

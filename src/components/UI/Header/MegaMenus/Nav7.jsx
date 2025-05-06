@@ -7,7 +7,7 @@ function Nav7() {
   const navData = [
     {
       title: 'My Dashboard',
-      items: ['. Database', '. E-book', '. DVD'],
+      items: ['Database', 'E-book', 'DVD'],
     },
     {
       title: '개인공지',
@@ -38,8 +38,8 @@ function Nav7() {
           >
             <button
               className={`duration-300 w-[400px] ${hoveredGroupIndex === groupIndex
-                  ? 'bg-[#ADDD1D]'
-                  : 'bg-[#8188A180] hover:bg-[#ADDD1D]'
+                ? 'bg-[#ADDD1D]'
+                : 'bg-[#8188A180] hover:bg-[#ADDD1D]'
                 } p-[16px] text-start font-bold text-[1rem] font-pretendard`}
             >
               {group.title}
@@ -48,8 +48,9 @@ function Nav7() {
               {group.items.map((item, itemIndex) => (
                 <li
                   key={itemIndex}
-                  className="duration-300 cursor-pointer h-[50px] font-pretendard text-[14px] py-4 pl-3 text-white border-b-1 border-[#454F6F] hover:text-[#11AC57]"
+                  className="duration-300 cursor-pointer h-[50px] font-pretendard text-[14px] py-4 pl-3 text-white border-b-1 border-[#454F6F] hover:text-[#11AC57] flex items-center gap-1.5"
                 >
+                  <span className="w-1 h-1 bg-white rounded-full" />
                   {item}
                 </li>
               ))}

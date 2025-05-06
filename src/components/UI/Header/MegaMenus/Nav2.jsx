@@ -13,12 +13,12 @@ function Nav2() {
     {
       title: "논문작성 및 출판지원",
       items: [
-        ". 참고문헌스타일",
-        ". 참고문헌관리도구",
-        ". 논문투고절차",
-        ". 논문교열서비스",
-        ". 논문유사도검사",
-        ". OA출판지원서비스",
+        "참고문헌스타일",
+        "참고문헌관리도구",
+        "논문투고절차",
+        "논문교열서비스",
+        "논문유사도검사",
+        "OA출판지원서비스",
       ],
     },
     {
@@ -38,8 +38,8 @@ function Nav2() {
           >
             <button
               className={`duration-300 w-[400px] ${hoveredGroupIndex === groupIndex
-                  ? 'bg-[#ADDD1D]'
-                  : 'bg-[#8188A180] hover:bg-[#ADDD1D]'
+                ? 'bg-[#ADDD1D]'
+                : 'bg-[#8188A180] hover:bg-[#ADDD1D]'
                 } p-[16px] text-start font-bold text-[1rem] font-pretendard`}
             >
               {group.title}
@@ -49,8 +49,9 @@ function Nav2() {
                 {group.items.map((item, itemIndex) => (
                   <li
                     key={itemIndex}
-                    className="duration-300 cursor-pointer h-[50px] font-pretendard text-[14px] py-4 pl-3 text-white border-b-1 border-[#454F6F] hover:text-[#11AC57]"
+                    className="duration-300 cursor-pointer h-[50px] font-pretendard text-[14px] py-4 pl-3 flex items-center gap-1.5 text-white border-b-1 border-[#454F6F] hover:text-[#11AC57]"
                   >
+                    <span className="w-1 h-1 bg-white rounded-full" />
                     {item}
                   </li>
                 ))}
