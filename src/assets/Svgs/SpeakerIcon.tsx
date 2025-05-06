@@ -1,17 +1,56 @@
 const SpeakerIcon = ({ isActive }: { isActive: boolean }) => {
-    return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clipPath="url(#clip0_16080_8229)">
-                <path d="M19 18.5996L18.998 18.6016C18.4732 18.2085 17.9186 17.7941 17.3984 17.4062C17.3997 17.4046 17.4011 17.403 17.4023 17.4014C17.921 17.7907 18.4746 18.2057 19 18.5996ZM12 16.2334L8.51465 14.1426L8.27734 14H4C3.45228 14 3 13.5477 3 13V11C3 10.4523 3.45228 10 4 10H8.27734L8.51465 9.85742L12 7.76562V16.2334Z" fill={isActive ? "#11AC57" : "#B0B7CC"} stroke={isActive ? "#11AC57" : "#B0B7CC"} strokeWidth="2" />
-            </g>
-            <defs>
-                <clipPath id="clip0_16080_8229">
-                    <rect width="24" height="24" fill="white" />
-                </clipPath>
-            </defs>
-        </svg>
+  return (
+    <svg
+      width="20"
+      height="17"
+      viewBox="0 0 20 17"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="16"
+        y="8"
+        width="4"
+        height="2"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+      <rect
+        x="15.1765"
+        y="13"
+        width="4"
+        height="2"
+        transform="rotate(36.0338 15.1765 13)"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+      <rect
+        x="14.0042"
+        y="3.39453"
+        width="4"
+        height="2"
+        transform="rotate(-36.9547 14.0042 3.39453)"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+      <path
+        d="M12 12.5V5.5C12.5 6 13.5 7.4 13.5 9C13.5 10.6 12.5 12 12 12.5Z"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+      <path
+        d="M0 8C0 6.89543 0.895431 6 2 6H6V12H2C0.89543 12 0 11.1046 0 10V8Z"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+      <rect
+        x="3"
+        y="12"
+        width="2"
+        height="4"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+      <path
+        d="M11 15L6 12V6L11 3V15Z"
+        fill={isActive ? "#11AC57" : "#B1B7CC"}
+      />
+    </svg>
+  );
+};
 
-    )
-}
-
-export default SpeakerIcon
+export default SpeakerIcon;

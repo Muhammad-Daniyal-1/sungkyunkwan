@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import {
-  IoSearchSharp,
-  IoChevronBack,
-  IoChevronForward,
-} from "react-icons/io5";
+import { IoSearchSharp } from "react-icons/io5";
 import Image from "next/image";
 import gsap from "gsap";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
+
+import { A11y } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const sampleQuestions = [
   "소프트웨어학과에서 가장 인기 있는 교양 과목은?",
@@ -20,35 +21,14 @@ const sampleQuestions = [
 ];
 
 export default function MobileSearchBox() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const asRef = useRef<HTMLDivElement | null>(null);
   const suggestionsRef = useRef<HTMLDivElement | null>(null);
-
-  const totalItems = sampleQuestions.length;
-
-  const getVisibleItems = () => {
-    const indices = [
-      (currentIndex - 1 + totalItems) % totalItems,
-      currentIndex,
-      (currentIndex + 1) % totalItems,
-    ];
-    return indices.map((i) => ({
-      text: sampleQuestions[i],
-      isActive: i === currentIndex,
-    }));
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalItems) % totalItems);
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalItems);
-  };
+  const swiperRef = useRef<SwiperType | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const suggestionButtons = asRef.current?.querySelectorAll(
@@ -266,46 +246,71 @@ export default function MobileSearchBox() {
       {/* suggestionsRef div: shows when input is NOT focused */}
       <div
         ref={suggestionsRef}
-        className="flex flex-col lg:flex-row mt-4 gap-8 items-start"
-        style={{ opacity: 1, height: "auto", display: "flex" }}
+        className="mt-4"
+        style={{ height: "auto", opacity: 1 }}
       >
-        <div className="flex lg:flex-row flex-col gap-2 items-center w-fit max-w-[95%] mx-auto">
-          <Image
-            src="/svgs/festival.svg"
-            alt="Festival"
-            width={24}
-            height={24}
-          />
-          <p className="lg:whitespace-nowrap w-fit text-center text-[#8188A1] font-semibold">
-            우리과
-            <span className="text-[#2D2F3E]">(소프트웨어공학과)</span>
-            친구들은 친구들은 이런 질문을 많이 했어요!
+        <div className="flex-col lg:flex-row flex gap-2 items-center mb-2">
+          <Image src="/svgs/festival.svg" alt="" width={24} height={24} />
+          <p className=" text-[#8188A1] text-sm">
+            우리과(소프트웨어공학과) 친구들은 이런 질문을 많이 했어요!
           </p>
         </div>
 
-        <div className="flex gap-2 items-center max-w-[95%] lg:max-w-[55%] overflow-hidden mx-auto">
-          <button onClick={handlePrev}>
-            <IoChevronBack size={24} />
-          </button>
-          <div className="flex gap-2 max-w-[90%] overflow-hidden mx-auto">
-            {getVisibleItems().map(({ text, isActive }) => (
-              <motion.button
-                key={text}
-                onMouseDown={() => alert(`Clicked: ${text}`)}
-                className={`px-3 py-2 whitespace-nowrap transition-all text-xs duration-300 ${
-                  isActive
-                    ? "text-primary font-semibold scale-105"
-                    : "text-[#CDD2E0]"
-                }`}
+        <Swiper
+          modules={[A11y]}
+          spaceBetween={10}
+          navigation
+          onSwiper={(swiper) => (swiperRef.current = swiper)}
+          loop={true}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+              spaceBetween: 10,
+            },
+            640: {
+              slidesPerView: 2,
+              spaceBetween: 10,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 15,
+            },
+          }}
+          className="w-full py-2"
+        >
+          {sampleQuestions.map((question) => (
+            <SwiperSlide key={question}>
+              <button
+                className="w-full text-center px-3 py-2 text-sm text-primary font-medium transition-all hover:text-primary-dark hover:font-semibold"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  if (inputRef.current) {
+                    inputRef.current.value = question;
+                  }
+                }}
               >
-                {text}
-              </motion.button>
-            ))}
+                {question}
+              </button>
+            </SwiperSlide>
+          ))}
+          <div>
+            {/* Custom navigation buttons */}
+            <button
+              onClick={() => swiperRef.current?.slidePrev()}
+              className="absolute left-0 top-[35%] transform -translate-y-1/2 z-10 p-1"
+              aria-label="Previous slide"
+            >
+              <FaChevronLeft size={24} className="text-primary" />
+            </button>
+            <button
+              onClick={() => swiperRef.current?.slideNext()}
+              className="absolute right-0 top-[35%] transform -translate-y-1/2 z-10 p-1 "
+              aria-label="Next slide"
+            >
+              <FaChevronRight size={24} className="text-primary" />
+            </button>
           </div>
-          <button onClick={handleNext}>
-            <IoChevronForward size={24} />
-          </button>
-        </div>
+        </Swiper>
       </div>
     </div>
   );

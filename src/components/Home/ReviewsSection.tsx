@@ -13,7 +13,6 @@ import {
   MdKeyboardArrowUp,
 } from "react-icons/md";
 
-// Sample data for the first tab (Best Reviews)
 const bestReviewsData = [
   {
     id: 1,
@@ -68,7 +67,6 @@ const bestReviewsData = [
   },
 ];
 
-// Sample data for the second tab (Review Authors)
 const reviewAuthorsData = [
   {
     id: 4,

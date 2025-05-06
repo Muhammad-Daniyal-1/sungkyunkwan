@@ -56,7 +56,7 @@ export default function InfoSectionSlider() {
   }, []);
 
   return (
-    <div className="mt-8 relative px-0 md:px-4 lg:px-8 overflow-hidden">
+    <div className="lg:mt-20 relative px-0 md:px-4 lg:px-8 overflow-hidden">
       <Swiper
         ref={swiperRef}
         modules={[EffectCoverflow, Autoplay]}

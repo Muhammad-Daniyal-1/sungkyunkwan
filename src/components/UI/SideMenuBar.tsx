@@ -61,21 +61,10 @@ const SideMenuBar = ({ activeSection, onSectionClick }: SideMenuBarProps) => {
           return (
             <li
               key={section.id}
-              className={`cursor-pointer p-[14px] transition-colors duration-500 ${
-                isActive ? "bg-gray-100" : ""
-              }`}
+              className={`cursor-pointer p-[14px] transition-colors duration-500`}
               onClick={() => onSectionClick(section.id)}
             >
               {section.icon(isActive)}
-
-              {/* Optional tooltip */}
-              {/* {isActive && (
-                <span className="absolute left-16 bg-white px-2 py-1 text-xs rounded shadow-md whitespace-nowrap">
-                  {section.id
-                    .replace("-", " ")
-                    .replace(/^\w/, (c) => c.toUpperCase())}
-                </span>
-              )} */}
             </li>
           );
         })}

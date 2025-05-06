@@ -104,7 +104,7 @@ section {
   transform: translateY(0) !important;
 }
 
-/* Optional: Section enter animation */
+
 @keyframes sectionEnter {
   from {
     opacity: 0;
@@ -146,4 +146,9 @@ section {
 
 .swiper-pagination-bullet-active {
   background-color: var(--color-secondary) !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  display: none !important;
 }

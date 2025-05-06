@@ -12,7 +12,6 @@ import "swiper/css/pagination";
 
 const tabs = ["대출 Best", "우리과 Best", "학년 Best", "주제별 Trend Best"];
 
-// demo data for each tab (put your real lists here)
 const tabsData = [
   [
     { id: 1, img: "/images/trend-1.jpg", title: "소년이 온다" },

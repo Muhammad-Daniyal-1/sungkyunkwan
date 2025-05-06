@@ -26,16 +26,13 @@ export default function Home() {
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [footerTransitionProgress, setFooterTransitionProgress] = useState(0);
 
-  // Check if window width is desktop on mount and resize
   useLayoutEffect(() => {
     const checkIsDesktop = () => {
       setIsDesktop(window.innerWidth >= 1280);
     };
 
-    // Initial check
     checkIsDesktop();
 
-    // Add resize listener
     window.addEventListener("resize", checkIsDesktop);
 
     return () => {
@@ -49,7 +46,6 @@ export default function Home() {
     { id: "research", component: <ResearchSection /> },
     { id: "trends", component: <TrendsSection /> },
     { id: "reviews", component: <ReviewsSection /> },
-    // { id: "best-reviews", component: <BestReviewSection /> },
     { id: "love-project", component: <LoveProjectSection /> },
     { id: "info", component: <InfoSection /> },
   ];
