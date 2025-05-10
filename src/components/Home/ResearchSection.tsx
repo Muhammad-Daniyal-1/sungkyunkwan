@@ -1,9 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MenuBookIcon from "@/assets/Svgs/MenuBookIcon";
 import { FaRegHeart } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Swiper as SwiperType } from "swiper";
 
 const data = [
   {
@@ -26,6 +36,12 @@ const data = [
   },
   {
     id: 4,
+    title: "Local & Federated Learning at the network edge for...",
+    journal: "Future Generation Computer Systems 2022",
+    authors: "Harth N.,Anagnostopoulos C.,Voegel H.J.,Kolomvatsos K.",
+  },
+  {
+    id: 5,
     title: "Local & Federated Learning at the network edge for...",
     journal: "Future Generation Computer Systems 2022",
     authors: "Harth N.,Anagnostopoulos C.,Voegel H.J.,Kolomvatsos K.",
@@ -64,6 +80,8 @@ export default function ResearchSection() {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = ["최신", "많이 인용됨"];
   const tabsData = [data, recentData];
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const swiperRef = useRef<SwiperType>(null);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 xl:mt-24">
@@ -118,46 +136,89 @@ export default function ResearchSection() {
           ))}
         </div>
 
-        {/* Tab content with smooth transition */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 transition-all duration-700 ease-in-out">
-          {tabsData[activeTab].map((item) => (
-            <div
-              key={item.id}
-              className="border border-[#E2EAE8] px-4 py-7 rounded-xl"
-            >
-              <div className="flex justify-between items-center gap-2">
-                <FaRegHeart />
-                <p className="border-x-2 border-gray text-xs items-center flex">
-                  <span className="text-red font-bold mx-1">SCOPUS</span>
-                  <span className="mx-1">6회인용</span>
-                </p>
-                <p className="items-center flex text-xs">
-                  <span className="text-red font-bold mx-1">KCI</span>
-                  <span className="mx-1">1회인용</span>
-                </p>
-              </div>
-              <p className="font-bold text-md my-6">{item.title}</p>
-              <div className="flex gap-1 text-[#8188A1] text-sm justify-center items-center my-6">
-                <MenuBookIcon />
-                <p>{item.journal}</p>
-              </div>
-              <div className="flex gap-1 justify-center items-center text-[#8188A1] text-sm">
-                <MenuBookIcon />
-                <p>{item.authors}</p>
-              </div>
-
-              <button className="flex justify-center items-center w-full bg-[#1D4676] rounded-full text-white p-2.5 mt-6">
-                PDF다운로드
-                <Image
-                  src="/svgs/download.svg"
-                  alt="Download"
-                  width={24}
-                  height={24}
-                  className="ml-2"
-                />
+        {/* Tab content with slider */}
+        <div className="relative px-2 md:px-10">
+          {/* Navigation buttons for desktop */}
+          {!isMobile && (
+            <>
+              <button
+                onClick={() => swiperRef.current?.slidePrev()}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center cursor-pointer"
+              >
+                <FaChevronLeft size={32} />
               </button>
-            </div>
-          ))}
+              <button
+                onClick={() => swiperRef.current?.slideNext()}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center cursor-pointer"
+              >
+                <FaChevronRight size={32} />
+              </button>
+            </>
+          )}
+
+          <Swiper
+            modules={[Pagination, Navigation]}
+            spaceBetween={20}
+            slidesPerView={isMobile ? 1.15 : 4}
+            slidesPerGroup={1}
+            loop={true}
+            pagination={isMobile ? { clickable: true } : false}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            className="w-full"
+            key={`swiper-${activeTab}`}
+          >
+            {tabsData[activeTab].map((item) => (
+              <SwiperSlide key={`${activeTab}-${item.id}`}>
+                <div className=" border border-[#E2EAE8] px-3 py-7 rounded-xl">
+                  <div className="flex justify-between items-center gap-2">
+                    <FaRegHeart />
+                    <p className="border-x-2 border-gray text-xs items-center flex">
+                      <span className="text-red font-bold mx-1">SCOPUS</span>
+                      <span className="mx-1">6회인용</span>
+                    </p>
+                    <p className="items-center flex text-xs">
+                      <span className="text-red font-bold mx-1">KCI</span>
+                      <span className="mx-1">1회인용</span>
+                    </p>
+                  </div>
+                  <p className="font-bold text-md my-6 line-clamp-2">
+                    {item.title}
+                  </p>
+                  <div className="flex gap-1 text-[#8188A1] text-sm justify-center items-center my-6">
+                    <MenuBookIcon />
+                    <p>{item.journal}</p>
+                  </div>
+                  <div className="flex gap-1 justify-center items-center text-[#8188A1] text-sm">
+                    <MenuBookIcon />
+                    <p>{item.authors}</p>
+                  </div>
+
+                  <button className="flex justify-center items-center w-full bg-[#1D4676] rounded-full text-white p-2.5 mt-6">
+                    PDF 다운로드
+                    <Image
+                      src="/svgs/download.svg"
+                      alt="Download"
+                      width={24}
+                      height={24}
+                      className="ml-2"
+                    />
+                  </button>
+                </div>
+              </SwiperSlide>
+            ))}
+
+            {!isMobile &&
+              tabsData[activeTab].length < 4 &&
+              Array.from({ length: 4 - tabsData[activeTab].length }).map(
+                (_, index) => (
+                  <SwiperSlide key={`empty-${index}`} className="opacity-0">
+                    <div className="invisible"></div>
+                  </SwiperSlide>
+                )
+              )}
+          </Swiper>
         </div>
       </div>
     </div>

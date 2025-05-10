@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { motion } from "framer-motion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 // Import Swiper styles
 import "swiper/css";
@@ -30,25 +30,6 @@ const data = [
     title: "산업공학과 김영희",
   },
 ];
-
-// Custom hook for media query
-const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
-
-    const listener = () => setMatches(media.matches);
-    media.addEventListener("change", listener);
-
-    return () => media.removeEventListener("change", listener);
-  }, [matches, query]);
-
-  return matches;
-};
 
 export default function LoveProjectSection() {
   const isMobile = useMediaQuery("(max-width: 768px)");

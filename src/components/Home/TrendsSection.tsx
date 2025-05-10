@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import { motion } from "framer-motion";
+import { Pagination, Navigation } from "swiper/modules";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Swiper as SwiperType } from "swiper";
 
 const tabs = ["대출 Best", "우리과 Best", "학년 Best", "주제별 Trend Best"];
 
@@ -19,6 +22,12 @@ const tabsData = [
     { id: 3, img: "/images/trend-3.jpg", title: "마음의 기술" },
     { id: 4, img: "/images/trend-4.jpg", title: "마지막 이기적 결정" },
     { id: 5, img: "/images/trend-5.jpg", title: "클래식 수업" },
+    { id: 6, img: "/images/trend-3.jpg", title: "마음의 기술" },
+    { id: 7, img: "/images/trend-4.jpg", title: "마지막 이기적 결정" },
+    { id: 8, img: "/images/trend-5.jpg", title: "클래식 수업" },
+    { id: 9, img: "/images/trend-1.jpg", title: "소년이 온다" },
+    { id: 10, img: "/images/trend-2.jpg", title: "채식주의자" },
+    { id: 11, img: "/images/trend-5.jpg", title: "클래식 수업" },
   ],
   [
     { id: 1, img: "/images/trend-2.jpg", title: "우리과 A" },
@@ -34,54 +43,13 @@ const tabsData = [
   ],
 ];
 
-// Custom hook for media query
-const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
-
-    const listener = () => setMatches(media.matches);
-    media.addEventListener("change", listener);
-
-    return () => media.removeEventListener("change", listener);
-  }, [matches, query]);
-
-  return matches;
-};
-
 export default function TrendsSection() {
   const [activeTab, setActiveTab] = useState(0);
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const swiperRef = useRef<SwiperType>(null);
 
-  // Motion variants for animation
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
-  // Book item component
   const BookItem = ({ item }: { item: (typeof tabsData)[0][number] }) => (
-    <motion.div variants={itemVariants}>
+    <div>
       <div className="flex justify-center">
         <div className="relative">
           <div className="absolute -top-1 -left-1 w-14 h-14 bg-green-500 rounded-tl-sm rounded-t-full rounded-br-full rounded-bl-full flex items-center justify-center">
@@ -92,12 +60,12 @@ export default function TrendsSection() {
             alt={item.title}
             width={200}
             height={300}
-            className="rounded-xl border border-[#C6D7D4] w-[300px] h-[400px] lg:max-w-[200px] lg:max-h-[300px]"
+            className="rounded-xl border border-[#C6D7D4] w-[200px] h-[300px] lg:max-w-[200px] lg:max-h-[300px]"
           />
         </div>
       </div>
       <p className="font-bold text-md my-6 text-center">{item.title}</p>
-    </motion.div>
+    </div>
   );
 
   return (
@@ -166,37 +134,56 @@ export default function TrendsSection() {
         </div>
 
         {/* tab content - conditional render based on screen size */}
-        {isMobile ? (
-          // Mobile view - Swiper slider
-          <div className="relative px-2">
-            <Swiper
-              modules={[Pagination]}
-              spaceBetween={20}
-              slidesPerView={1.5}
-              loop={true}
-              pagination={{ clickable: true }}
-              className="w-full"
-            >
-              {tabsData[activeTab].map((item) => (
-                <SwiperSlide key={item.id}>
-                  <BookItem item={item} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        ) : (
-          // Desktop view - Grid layout
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 transition-all duration-700 ease-in-out"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+        <div className="relative px-2 md:px-10">
+          {/* Navigation buttons for desktop */}
+          {!isMobile && (
+            <>
+              <button
+                onClick={() => swiperRef.current?.slidePrev()}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center  cursor-pointer"
+              >
+                <FaChevronLeft size={32} />
+              </button>
+              <button
+                onClick={() => swiperRef.current?.slideNext()}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center cursor-pointer"
+              >
+                <FaChevronRight size={32} />
+              </button>
+            </>
+          )}
+
+          <Swiper
+            modules={[Pagination, Navigation]}
+            spaceBetween={20}
+            slidesPerView={isMobile ? 1.5 : 5}
+            slidesPerGroup={1}
+            loop={true}
+            pagination={isMobile ? { clickable: true } : false}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            className="w-full"
+            key={`swiper-${activeTab}`} // Force re-render when tab changes
           >
             {tabsData[activeTab].map((item) => (
-              <BookItem key={item.id} item={item} />
+              <SwiperSlide key={`${activeTab}-${item.id}`}>
+                <BookItem item={item} />
+              </SwiperSlide>
             ))}
-          </motion.div>
-        )}
+
+            {/* Add empty slides to fill the view if not enough items */}
+            {!isMobile &&
+              tabsData[activeTab].length < 5 &&
+              Array.from({ length: 5 - tabsData[activeTab].length }).map(
+                (_, index) => (
+                  <SwiperSlide key={`empty-${index}`} className="opacity-0">
+                    <div className="invisible"></div>
+                  </SwiperSlide>
+                )
+              )}
+          </Swiper>
+        </div>
       </div>
     </div>
   );

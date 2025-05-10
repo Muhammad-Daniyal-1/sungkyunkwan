@@ -37,23 +37,30 @@ const data = [
   },
 ];
 
-export default function RightSidebar() {
+export default function RightSidebar({
+  onTopClick,
+}: {
+  onTopClick?: () => void;
+}) {
   return (
     <div className="fixed right-[2%] top-1/2 translate-y-[-45%] shadow-[4px_4px_4px_0_rgba(0,0,0,0.10) z-50">
       <div className="flex flex-col gap-4 items-center justify-center">
-        <ul className="flex flex-col gap-3 items-center justify-center text-white bg-primary py-6 rounded-2xl">
+        <ul className="flex flex-col items-center justify-center text-white bg-primary py-6 rounded-2xl">
           {data.map((item) => (
             <li
               key={item.id}
-              className=" pb-2 flex items-center flex-col gap-2"
+              className=" flex items-center flex-col gap-2 cursor-pointer hover:bg-[#1D467699] px-3 pt-3"
             >
               {item.icon}
-              <span className="text-sm px-2">{item.title}</span>
+              <span className="text-xs">{item.title}</span>
               <span className="w-20 h-[1px] bg-[#454F6F]"></span>
             </li>
           ))}
         </ul>
-        <button className="flex flex-col items-center  justify-center bg-secondary rounded-full text-white w-14 h-14 gap-1">
+        <button
+          className="flex flex-col items-center  justify-center bg-secondary rounded-full text-white w-14 h-14 gap-1"
+          onClick={onTopClick}
+        >
           <FaArrowUpLong size={16} />
           <span className="text-xs font-bold">TOP</span>
         </button>

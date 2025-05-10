@@ -330,6 +330,21 @@ export default function Home() {
     zIndex: 10,
   };
 
+  const handleTopClick = () => {
+    if (isDesktop) {
+      if (isFooterVisible) {
+        hideFooter();
+        setTimeout(() => {
+          goToSection(0);
+        }, 800);
+      } else {
+        goToSection(0);
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {/* Desktop Version with Animations */}
@@ -357,7 +372,7 @@ export default function Home() {
           onSectionClick={handleSectionClick}
         />
 
-        <RightSidebar />
+        <RightSidebar onTopClick={handleTopClick} />
 
         {/* Sections container with transform for transitions */}
         <div
