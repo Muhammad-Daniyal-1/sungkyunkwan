@@ -4,7 +4,7 @@ import { useEffect, useState, useLayoutEffect } from "react";
 import TopBar from "@/components/UI/Header/TopBar";
 import MegaMenu from "@/components/UI/Header/MegaMenu";
 import SideMenuBar from "@/components/UI/SideMenuBar";
-import SearchBox from "@/components/Home/SearchBox";
+import SearchBox from "@/components/UI/SearchBox";
 import HeroSection from "@/components/Home/HeroSection";
 import ResearchSection from "@/components/Home/ResearchSection";
 import TrendsSection from "@/components/Home/TrendsSection";
@@ -406,9 +406,9 @@ export default function Home() {
       {/* Mobile Version with Normal Scrolling */}
       <div className="mobile-sections-container xl:hidden">
         <MobileHeader />
-        <div className="px-4 sm:px-6 md:px-8">
-          <MobileSearchBox />
-        </div>
+
+        <MobileSearchBox />
+
         <div className="py-8 md:py-12">
           <HeroSection />
         </div>
@@ -420,9 +420,9 @@ export default function Home() {
             </section>
           ))}
         </div>
+        {/* Mobile Footer */}
+        <MobileFooter />
       </div>
-      {/* Mobile Footer */}
-      <MobileFooter />
     </>
   );
 }

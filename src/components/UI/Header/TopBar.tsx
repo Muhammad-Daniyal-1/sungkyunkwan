@@ -1,14 +1,15 @@
 import Image from "next/image";
 import { FaCaretDown } from "react-icons/fa";
 import { FiGrid, FiLogIn } from "react-icons/fi";
+import Link from "next/link";
 
 export default function TopBar() {
   return (
     <div>
-      <header className="w-full flex justify-between items-center px-6 py-3 bg-gray-50 border border-[#EFF2F1]">
-        <div className="flex items-center space-x-4">
+      <header className="w-full justify-between items-center px-6 py-3 bg-gray-50 border border-[#EFF2F1] hidden xl:flex">
+        <Link href="/" className="flex items-center space-x-4">
           <Image src="/svgs/logo.svg" alt="Logo" width={135} height={50} />
-        </div>
+        </Link>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-4">
             <Image src="/svgs/heart.svg" alt="Heart" width={24} height={24} />
@@ -44,10 +45,13 @@ export default function TopBar() {
             </div>
           </div>
 
-          <button className="bg-white rounded-full px-4 py-2 flex items-center gap-2 border border-gray text-gray">
+          <Link
+            href="/sitemap"
+            className="bg-white rounded-full px-4 py-2 flex items-center gap-2 border border-[#EFF2F1] text-[#B1B7CC] hover:text-[#454F6F] hover:border-[#CDD2E0] transition-colors ease-in-out duration-500"
+          >
             <FiGrid size={18} />
             전체메뉴
-          </button>
+          </Link>
         </div>
       </header>
     </div>

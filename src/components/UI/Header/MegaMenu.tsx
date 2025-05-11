@@ -44,7 +44,7 @@ function MegaMenu() {
   };
 
   return (
-    <div className="w-screen relative">
+    <div className="w-screen relative hidden xl:block">
       <div
         className="relative "
         onMouseLeave={() => setActiveIndex(null)}

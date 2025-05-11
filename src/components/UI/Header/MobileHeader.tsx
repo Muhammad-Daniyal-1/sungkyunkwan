@@ -6,6 +6,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
 import { FaCaretDown } from "react-icons/fa";
+import Link from "next/link";
 
 export default function MobileHeader() {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -105,7 +106,7 @@ export default function MobileHeader() {
       : [];
 
   return (
-    <>
+    <div className="xl:hidden">
       <div className="flex items-center justify-between py-3 px-6 shadow-lg">
         <div className="flex items-center">
           <RxHamburgerMenu
@@ -114,9 +115,9 @@ export default function MobileHeader() {
             onClick={() => setIsNavOpen(true)}
           />
         </div>
-        <div>
+        <Link href="/">
           <Image src="/svgs/logo.svg" alt="Logo" width={180} height={50} />
-        </div>
+        </Link>
         <div className="flex items-center">
           <FiLogIn size={20} className="text-primary" />
         </div>
@@ -273,6 +274,6 @@ export default function MobileHeader() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

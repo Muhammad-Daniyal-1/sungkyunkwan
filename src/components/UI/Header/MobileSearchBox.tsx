@@ -115,7 +115,7 @@ export default function MobileSearchBox() {
   };
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="px-4 sm:px-6 md:px-8">
       <div
         onClick={(e) => {
           const el = e.target as HTMLElement;
