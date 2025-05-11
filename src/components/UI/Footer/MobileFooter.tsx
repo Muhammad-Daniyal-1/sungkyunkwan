@@ -3,7 +3,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 
 export default function MobileFooter() {
   return (
-    <div className="bg-[#E0E2EB] py-6 px-5">
+    <div className="bg-[#E0E2EB] py-6 px-5 xl:hidden">
       <Image
         src="/svgs/footer-logo.svg"
         alt="footer-logo"

@@ -3,7 +3,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <div className="bg-white">
+    <div className="bg-white hidden xl:block">
       <div className="flex justify-center items-center gap-8 border border-gray  pb-2 pt-3">
         <p>주요전화번호</p>
         <div className="w-[1px] h-4 bg-[#CDD2E0]" />
