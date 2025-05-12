@@ -12,7 +12,9 @@ import Footer from "@/components/UI/Footer/Footer";
 export default function SiteMap() {
   return (
     <div className="h-full overflow-y-auto">
-      <RightSidebar />
+      <div className="hidden xl:block">
+        <RightSidebar />
+      </div>
       <TopBar />
       <MobileHeader />
       <MegaMenu />
@@ -23,12 +25,12 @@ export default function SiteMap() {
         <MobileSearchBox />
       </div>
 
-      <div className="px-20 mx-auto max-w-[1560px]">
-        <div className="grid grid-cols-6 mt-10 border-t border-[#E0E2EB]">
-          <div className="col-span-1 border-r border-[#E0E2EB]">
+      <div className="px-4 sm:px-8 md:px-12 lg:px-20 mx-auto max-w-[1560px]">
+        <div className="flex flex-col md:grid md:grid-cols-6 mt-10 border-t border-[#E0E2EB]">
+          <div className="md:col-span-1 border-b md:border-b-0 md:border-r border-[#E0E2EB]">
             <Sidebar />
           </div>
-          <div className="col-span-5">
+          <div className="md:col-span-5">
             <Menu />
           </div>
         </div>
